@@ -8,7 +8,7 @@ const EmployeData = ({disabled}) => {
   return (
     <fieldset className="border p-1">
       <legend className="float-none w-auto p-2 contenedorFieldSet">
-        <i className="fs-5 bi-search "></i><span className="ms-1 d-none d-sm-inline colorFont">Info Empleado</span>
+        <i className="fs-5 bi-person "></i><span className="ms-1 d-none d-sm-inline colorFont">Info Empleado</span>
       </legend>
     <div className='container-flex d-flex flex-row justify-content-start align-items-center'>
         <div className='row w-100'>

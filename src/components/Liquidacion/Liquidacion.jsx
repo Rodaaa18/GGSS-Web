@@ -1,12 +1,83 @@
-import React from 'react'
-import { classesFormDP, classesFormDPPagos, inputButtonClasessEmpleador, inputButtonClasessParentesco, inputButtonClasessParentescoEmpleador } from '../../classes/classes'
+import React, { useEffect, useState } from 'react'
+import {  classesFormDPPagos,  inputButtonClasessParentesco } from '../../classes/classes'
 import DatosCertificado from './DatosCertificadoOficio'
 import IngresoContrato from './IngresoContrato'
 import InputButtonLiquidacion from '../Inputs/InputButton/InputButtonLiquidacion'
 import InputForm from '../Inputs/InputForm/InputForm'
 import SindicatoLiquidacion from '../Inputs/SindicatoLiquidacion/SindicatoLiquidacion'
+import axios from 'axios'
 
-const Liquidacion = () => {
+const Liquidacion = ({responses, setResponses}) => {
+    const [ formLiquidacion, setFormLiquidacion ] = useState(responses["formLiquidacion"]);
+    const [ combosForm , setCombosForm ] = useState({});
+
+    function onChangeValues(e, key){
+        const newResponse = {...formLiquidacion};
+        newResponse[key] = e;
+        setFormLiquidacion({
+          ...newResponse
+        });
+    }
+    useEffect(() => {  
+        setResponses({
+          ...responses,
+          formLiquidacion
+        });    
+    },[formLiquidacion]);
+
+    const newState = {...formLiquidacion};
+    const handleFetch = async (url, propState) => {        
+            
+            await axios
+            .get(url)
+            .then((res) => {
+                newState[propState] = (res.data.result);            
+            })
+            .catch((err) => {
+            
+            });    
+        };
+    const handleFetchComun = async (url, propState) => {
+       
+        await axios
+            .get(url)
+            .then((res) => {
+            newState[propState] = (res.data);
+            })
+            .catch((err) => {
+            
+            });
+        };
+      useEffect(()=>{
+        new Promise((resolve, reject)=>{
+                resolve(
+                    handleFetch("http://54.243.192.82/api/Empleadores", "empleadores"),
+                    handleFetch("http://54.243.192.82/api/Convenios", "convenios"),
+                    handleFetch("http://54.243.192.82/api/Categorias", "categorias"),
+                    handleFetch("http://54.243.192.82/api/Agrupamientos", "agrupamientos"),
+                    handleFetch("http://54.243.192.82/api/Cargos", "cargos"),
+                    handleFetch("http://54.243.192.82/api/TareasDesempeñadas", "tareasDesempeñadas"),
+                    handleFetch("http://54.243.192.82/api/ModosContratacion", "modosContratacion"),
+                    handleFetch("http://54.243.192.82/api/ModosLiquidacion", "modosLiquidacion"),
+                    handleFetch("http://54.243.192.82/api/CentrosDeCostos", "centrosDeCosto"),
+                    handleFetchComun("http://54.243.192.82/api/SectoresDptos/0,%201", "sectores"),
+                    handleFetch("http://54.243.192.82/api/ObrasSociales", "obrasSociales"),
+                    handleFetch("http://54.243.192.82/api/FormasdePagos", "formasDePago"),
+                    handleFetch("http://54.243.192.82/api/LugaresdePago", "lugaresDePago"),
+                    handleFetch("http://54.243.192.82/api/Bancos", "bancos"),
+                    handleFetchComun("http://54.243.192.82/api/Direcciones/DireccionesDatos/0,1", "direcciones"),
+                    handleFetch("http://54.243.192.82/api/Sindicatos", "sindicatos"),
+                    handleFetch("http://54.243.192.82/api/Esquemas", "esquemas"),
+                    handleFetchComun("http://54.243.192.82/api/ConceptosDatos/0,1", "conceptos")
+                    )
+            }
+            ).then(
+            setCombosForm(newState)
+        )
+      },[]);
+
+      console.log(combosForm.convenios);
+
   return (
     <div>
         <fieldset className="border p-2">
@@ -19,87 +90,107 @@ const Liquidacion = () => {
                                     <div className='col-xl-6 col-lg-12 col-md-12'>
                                     <InputButtonLiquidacion
                                             clasess={inputButtonClasessParentesco}
+                                            array={combosForm?.empleadores}
+                                            onChange={onChangeValues}
                                             nameButton="..."
                                             nameLabel="Empleador"
                                             placeholder="Empleador"
-                                            propArrayOp="nombreObraSocial"
-                                            propIdOption="iDobraSocial"
+                                            propArrayOp="razonSocial"
+                                            propIdOption="iDempleador"
                                             idInput="idEmpleador"
                                         />
                                         <InputButtonLiquidacion
                                             clasess={inputButtonClasessParentesco}
+                                            array={combosForm?.convenios}
+                                            onChange={onChangeValues}
                                             nameButton="..."
                                             nameLabel="Convenio"
                                             placeholder="Convenio"
-                                            propArrayOp="nombreObraSocial"
-                                            propIdOption="iDobraSocial"
+                                            propArrayOp="convenio"
+                                            propIdOption="iDconvenio"
                                             idInput="idConvenio"
                                         />
                                         <InputButtonLiquidacion
                                             clasess={inputButtonClasessParentesco}
+                                            array={combosForm?.categorias}
+                                            onChange={onChangeValues}
                                             nameButton="..."
                                             nameLabel="Categoria"
                                             placeholder="Categoria"
-                                            propArrayOp="nombreObraSocial"
-                                            propIdOption="iDobraSocial"
+                                            propArrayOp="categoria"
+                                            propIdOption="iDcategoria"
                                             idInput="idCategoria"
                                         />
                                         <InputButtonLiquidacion
                                             clasess={inputButtonClasessParentesco}
+                                            array={combosForm?.agrupamientos}
+                                            onChange={onChangeValues}
                                             nameButton="..."
                                             nameLabel="Agrupamiento"
                                             placeholder="Agrupamiento"
-                                            propArrayOp="nombreObraSocial"
-                                            propIdOption="iDobraSocial"
+                                            propArrayOp="agrupamiento"
+                                            propIdOption="idAgrupamiento"
                                             idInput="idAgrupamiento"
                                         />
                                         <InputButtonLiquidacion
                                             clasess={inputButtonClasessParentesco}
+                                            array={combosForm?.cargos}
+                                            onChange={onChangeValues}
                                             nameButton="..."
                                             nameLabel="Cargo"
                                             placeholder="Cargo"
-                                            propArrayOp="nombreObraSocial"
-                                            propIdOption="iDobraSocial"
+                                            propArrayOp="nombreCargo"
+                                            propIdOption="iDcargo"
                                             idInput="idCargo"
                                         />
                                         <InputButtonLiquidacion
                                             clasess={inputButtonClasessParentesco}
+                                            array={combosForm?.tareasDesempeñadas}
+                                            onChange={onChangeValues}
                                             nameButton="..."
                                             nameLabel="Tarea Des."
                                             placeholder="Tarea Des."
-                                            propArrayOp="nombreObraSocial"
-                                            propIdOption="iDobraSocial"
+                                            propArrayOp="tareaDesempeñada"
+                                            propIdOption="idTareaDesempeñada"
                                             idInput="idTareaDesempeñada"
                                         />
                                         <InputButtonLiquidacion
                                             clasess={inputButtonClasessParentesco}
+                                            array={combosForm?.modosContratacion}
+                                            onChange={onChangeValues}
                                             nameButton="..."
                                             nameLabel="M. Contratac"
                                             placeholder="M. Contratac"
-                                            propArrayOp="nombreObraSocial"
-                                            propIdOption="iDobraSocial"
+                                            propArrayOp="modoContratacion"
+                                            propIdOption="iDmodoContratacion"
                                             idInput="idModoContratacion"
                                         />
                                         <InputButtonLiquidacion
                                             clasess={inputButtonClasessParentesco}
+                                            array={combosForm?.modosLiquidacion}
+                                            onChange={onChangeValues}
                                             nameButton="..."
                                             nameLabel="M. Liquid."
                                             placeholder="M. Liquid."
-                                            propArrayOp="nombreObraSocial"
-                                            propIdOption="iDobraSocial"
+                                            propArrayOp="modoLiquidacion"
+                                            propIdOption="iDmodoLiquidacion"
                                             idInput="idModoLiquidacion"
                                         />
                                         <InputButtonLiquidacion
                                             clasess={inputButtonClasessParentesco}
+                                            array={combosForm?.centrosDeCosto}
+                                            onChange={onChangeValues}
                                             nameButton="..."
                                             nameLabel="Ctro Costo"
                                             placeholder="Ctro Costo"
-                                            propArrayOp="nombreObraSocial"
-                                            propIdOption="iDobraSocial"
+                                            propArrayOp="centrodeCosto"
+                                            propIdOption="idCentrodeCosto"
                                             idInput="idCentroCosto"
                                         />
                                         <InputButtonLiquidacion
                                             clasess={inputButtonClasessParentesco}
+                                            array={combosForm?.sectores}
+                                            onChange={onChangeValues}
                                             nameButton="..."
                                             nameLabel="Secretaria"
                                             placeholder="Secretaria"
@@ -109,6 +200,8 @@ const Liquidacion = () => {
                                         />
                                         <InputButtonLiquidacion
                                             clasess={inputButtonClasessParentesco}
+                                            array={combosForm?.obrasSociales}
+                                            onChange={onChangeValues}
                                             nameButton="..."
                                             nameLabel="Obra Social"
                                             placeholder="Obra Social"
@@ -125,33 +218,41 @@ const Liquidacion = () => {
                                             <form action="" className='norder border-3 d-flex flex-column justify-content-center align-items-start w-100 p-2'>
                                             <InputButtonLiquidacion
                                                 clasess={inputButtonClasessParentesco}
+                                                array={combosForm?.formasDePago}
+                                                onChange={onChangeValues}
                                                 nameButton="..."
                                                 nameLabel="Forma Pago"
                                                 placeholder="Forma Pago"
-                                                propArrayOp="nombreObraSocial"
-                                                propIdOption="iDobraSocial"
+                                                propArrayOp="nombreFormadePago"
+                                                propIdOption="iDformadePago"
                                                 idInput="idFormaPago"
                                             />
                                             <InputButtonLiquidacion
                                                 clasess={inputButtonClasessParentesco}
+                                                array={combosForm?.lugaresDePago}
+                                                onChange={onChangeValues}
                                                 nameButton="..."
                                                 nameLabel="Lugar Pago"
                                                 placeholder="Lugar Pago"
-                                                propArrayOp="nombreObraSocial"
-                                                propIdOption="iDobraSocial"
+                                                propArrayOp="lugardePago"
+                                                propIdOption="idLugardePago"
                                                 idInput="idLugarPago"
                                             />
                                             <InputButtonLiquidacion
                                                 clasess={inputButtonClasessParentesco}
+                                                array={combosForm?.bancos}
+                                                onChange={onChangeValues}
                                                 nameButton="..."
                                                 nameLabel="Banco"
                                                 placeholder="Banco"
-                                                propArrayOp="nombreObraSocial"
-                                                propIdOption="iDobraSocial"
+                                                propArrayOp="nombreBanco"
+                                                propIdOption="idBanco"
                                                 idInput="idBanco"
                                             />
                                              <InputForm
                                                 clasess={classesFormDPPagos}
+                                                onChange={onChangeValues}
+                                                value={formLiquidacion?.nroCuenta}
                                                 idInput="nroCuenta"
                                                 messageError="Solo puede contener números."
                                                 placeHolder="N° Cuenta"
@@ -163,14 +264,16 @@ const Liquidacion = () => {
                                                 <label htmlFor="" className='labelInputDate'> Tipo</label>
                                                 <div className='d-flex flex-row justify-content-between align-items-center w-100 m-0 p-0 '>
                                                     <label htmlFor="" className='labelInputRadio'> Caja Ahorro</label>
-                                                    <input type="radio" name="fechaNacimiento" id="fechaNacimiento" className='radioClass' />
+                                                    <input onChange={(e)=> onChangeValues(e.target.checked, "tipoCuenta")}type="radio" name="tipoCuenta" id="tipoCuenta" className='radioClass' value={1} />
                                                     <label htmlFor="" className='labelInputRadio'> Cta Corriente</label>
-                                                    <input type="radio" name="fechaNacimiento" id="fechaNacimiento" className='radioClass' />
+                                                    <input onChange={(e)=> onChangeValues(e.target.checked, "tipoCuenta")}type="radio" name="tipoCuenta" id="tipoCuenta" className='radioClass' value={2} />
                                                 </div>
                                             </div>
                                             <InputForm
                                                 clasess={classesFormDPPagos}
-                                                idInput="nroCuenta"
+                                                onChange={onChangeValues}
+                                                value={formLiquidacion?.cbu}
+                                                idInput="cbu"
                                                 messageError="Solo puede contener números."
                                                 placeHolder="C.B.U"
                                                 nameLabel="C.B.U"
@@ -184,6 +287,8 @@ const Liquidacion = () => {
                                         </fieldset>
                                             <InputButtonLiquidacion
                                                 clasess={inputButtonClasessParentesco}
+                                                array={combosForm?.direcciones}
+                                                onChange={onChangeValues}
                                                 nameButton="..."
                                                 nameLabel="Direccion"
                                                 placeholder="Direccion"
@@ -194,13 +299,15 @@ const Liquidacion = () => {
                                             <SindicatoLiquidacion 
                                             clasess={inputButtonClasessParentesco}
                                             nameLabel="Sindicato"
-                                            array={[]}
+                                            array={combosForm?.sindicatos}
+                                            propArrayOp="nombreSindicato"
+                                            propIdOption="idSindicato"
                                             />
                                     </div>
                             </div>
                             <div className='row'>
                                 <div className='col-12 mt-1'>
-                                    <IngresoContrato />
+                                    <IngresoContrato esquemas={combosForm?.esquemas}/>
                                 </div>                                
                             </div>
                             <div className='row'>

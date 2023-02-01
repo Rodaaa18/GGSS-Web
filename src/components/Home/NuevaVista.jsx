@@ -17,7 +17,7 @@ const NuevaVista = () => {
     const [ disable, setDisable ] = useState(true);
     const dispatch = useDispatch();
 
-    console.log(responses)
+    
     const url = `http://54.243.192.82/api/Empleados?page=2000&ordered=true`;
     const urlEmpleadoPorApellido = `http://54.243.192.82/api/Empleados?records=10000&filter=${responses?.formBrowser?.nombreApellido ? responses?.formBrowser?.nombreApellido  : null}&ordered=true`;
     const urlEmpleadoPorLegajo = `http://54.243.192.82/api/Empleados?records=10000&legajo=${responses?.formBrowser?.legajo ? responses?.formBrowser?.legajo : null}&ordered=true`;

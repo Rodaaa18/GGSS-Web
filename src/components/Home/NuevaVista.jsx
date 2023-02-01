@@ -1,4 +1,7 @@
-import { useState } from 'react'
+import axios from 'axios';
+import { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux';
+import { getEmpleados } from '../../redux/actions/emplyeActions';
 import Browser from '../Browser/Browser';
 import Personales from '../DatosPersonales/Personales';
 import EmployeData from '../EmployeData/EmployeData';
@@ -11,7 +14,51 @@ const NuevaVista = () => {
     const [ onOff, setOnOff ] = useState(true);
     const [ responses, setResponses ] = useState({});
     const [ disable, setDisable ] = useState(true);
-   
+    const dispatch = useDispatch();
+
+    console.log(responses)
+    const url = `http://54.243.192.82/api/Empleados?page=2000&ordered=true`;
+    const urlEmpleadoPorApellido = `http://54.243.192.82/api/Empleados?records=10000&filter=${responses?.formBrowser?.nombreApellido ? responses?.formBrowser?.nombreApellido  : null}&ordered=true`;
+    const urlEmpleadoPorLegajo = `http://54.243.192.82/api/Empleados?records=10000&legajo=${responses?.formBrowser?.legajo ? responses?.formBrowser?.legajo : null}&ordered=true`;
+    const urlEmpleadoApYLegajo = `http://54.243.192.82/api/Empleados?records=10000&filter=${responses?.formBrowser?.nombreApellido  ? responses?.formBrowser?.nombreApellido  : null}&legajo=${responses?.formBrowser?.legajo ? responses?.formBrowser?.legajo : null}&ordered=true`;
+    const urlApeLegOrdered = `http://54.243.192.82/api/Empleados?records=10000&filter=${responses?.formBrowser?.nombreApellido  ? responses?.formBrowser?.nombreApellido  : null}&legajo=${responses?.formBrowser?.legajo? responses?.formBrowser?.legajo : null}&ordered=true`;
+
+    async function getEmpleadosData(){
+      if(responses?.formBrowser?.nombreApellido){
+        await axios({method: 'get',
+                      url: urlEmpleadoPorApellido,
+                      timeout: 1000}).then((res) => {
+          dispatch(getEmpleados(res.data.result));    
+        });
+        return;
+      }
+      else if(responses?.formBrowser?.legajo){
+        await axios({method: 'get',
+                    url: urlEmpleadoPorLegajo,
+                    timeout: 1000}).then((res) => {
+          dispatch(getEmpleados(res.data.result));    
+        });
+        return;
+      }else if(responses?.formBrowser?.nombreApellido   && responses?.formBrowser?.legajo){
+        await axios({method: 'get',
+                    url: urlEmpleadoApYLegajo,
+                    timeout: 1000}).then((res) => {
+            dispatch(getEmpleados(res.data.result));    
+        });
+        return;
+      }else{
+        await axios.get(url).then((res) => {
+
+          dispatch(getEmpleados(res.data.result));
+    
+        });
+      }      
+    }
+
+    useEffect(()=>{
+        getEmpleadosData();
+    },[responses?.formBrowser?.nombreApellido , responses?.formBrowser?.legajo])
+
   return (
     <><div className="offcanvas offcanvas-start offcanvasNav" tabIndex="-1" id="offcanvas" data-bs-keyboard="false" data-bs-backdrop="false">
     <div className="offcanvas-header ">
@@ -104,7 +151,7 @@ const NuevaVista = () => {
                             index === 1 && <div className='col-xl-12 col-lg-12 col-md-12'><Personales setResponses={setResponses} responses={responses} disable={disable} onOff={onOff} index={index}/></div>
                         }
                         {
-                            index === 2 && <div className='col-xl-12 col-lg-12 col-md-12'><Familias index={index}/></div>
+                            index === 2 && <div className='col-xl-12 col-lg-12 col-md-12'><Familias index={index} setResponses={setResponses} responses={responses}/></div>
                         }
                     </div>
                 </div>

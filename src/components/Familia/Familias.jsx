@@ -1,14 +1,69 @@
-import React from 'react'
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 import { classesFormDP, inputButtonClasessParentesco, inputButtonClasessTextArea } from '../../classes/classes'
 import InputButtonLiquidacion from '../Inputs/InputButton/InputButtonLiquidacion'
 import InputForm from '../Inputs/InputForm/InputForm'
 import TextArea from '../Inputs/TextArea/TextArea';
 import "../Home/NuevaVista.css";
 import TableBasic from '../Tables/TableBasic';
+import { AXIOS_ERROR, SET_LOADING } from '../../redux/types/employeTypes';
+import axios from 'axios';
+import { useState } from 'react';
+import InputRadio from '../Inputs/InputRadio/InputRadio';
 
-const Familias = ({index}) => {
+const Familias = ({index, responses, setResponses}) => {
+    const [ formFamilias, setFormFamilias ] = useState(responses["formFamilias"]);
+    const [ parentescos, setParentescos ] = useState([]);
+    const [ familiaresEmpleado, setFamiliaresEmpleado ] = useState([]);
+    const dispatch = useDispatch();
+    const empleadoSeleccionado = useSelector((state)=> state.employeState.employe);
     const tiposDocumento = useSelector((state)=> state.fetchState.tiposDocumento);
+    const nacionalidades = useSelector((state)=> state.fetchState.paises);
+    const estudios = useSelector((state)=> state.fetchState.estudios);
+
+
+    const handleFetch = async (url, action) => {        
+        
+        await
+          axios
+          .get(url)
+          .then((res) => {
+            action(res.data.result);            
+          })
+          .catch((err) => {
+           
+          });    
+      };
+      useEffect(()=>{       
+        handleFetch("http://54.243.192.82/api/Parentescos", setParentescos)  
+      },[])
+      /* useEffect(()=>{
+        handleFetch(`http://54.243.192.82/api/MostrarDatosFamiliarPorEmpleado/${empleadoSeleccionado?.iDempleado}`, setFamiliaresEmpleado) 
+      },[empleadoSeleccionado?.iDempleado]) */
+      useEffect(()=>{
+        axios.get(
+            `http://54.243.192.82/api/MostrarDatosFamiliarPorEmpleado/${empleadoSeleccionado?.iDempleado}`
+        ).then((res)=>{
+            setFamiliaresEmpleado(res.data)
+        })
+      },[empleadoSeleccionado?.iDempleado])
+
+      console.log(empleadoSeleccionado?.iDempleado);
+
+    function onChangeValues(e, key){
+        const newResponse = {...formFamilias};
+        newResponse[key] = e;
+        setFormFamilias({
+          ...newResponse
+        });
+    }
+    useEffect(() => {  
+        setResponses({
+          ...responses,
+          formFamilias
+        });    
+    },[formFamilias]);
+
     const columns = [
         "Ape Nombre",
         "Tipo",
@@ -36,17 +91,19 @@ const Familias = ({index}) => {
                         <div className='row'>
                             <div className='col-xl-6 col-lg-12 col-md-12'>
                                 <InputForm 
+                                value={formFamilias?.nombreApellido}
                                 clasess={classesFormDP}
-                                idInput="legajo"
+                                idInput="nombreApellido"
                                 messageError="Solo puede contener números."
                                 placeHolder="Apellido y Nombres"
                                 nameLabel="Apellido y Nombres"
                                 numbers={true}
                                 obligatorio ={true}
+                                onChange={onChangeValues}
                                 />
                                 <div className='d-flex flex-row justify-content-start align-items-center w-100 m-0 p-0'>
                                     <label htmlFor="" className='labelInput'>DNI</label>
-                                    <select name="" className='formulario-input-InpButton-TipoDNI' id="">
+                                    <select name="iDtipoDocumento" onChange={(e)=>onChangeValues(e.target.value, "iDtipoDocumento")} className='formulario-input-InpButton-TipoDNI' id="iDtipoDocumento">
                                         <option value="">Seleccionar</option>
                                         {
                                             tiposDocumento && tiposDocumento.map((item,i)=>{
@@ -54,35 +111,53 @@ const Familias = ({index}) => {
                                             })
                                         }
                                     </select>
-                                    <input type="text" className='formulario-input-Legajo-TipoDNI ' name="" id="" placeholder='N° Documento' />
+                                    <input type="text" onChange={(e)=>onChangeValues(e.target.value, "nroDocumento")}  className='formulario-input-Legajo-TipoDNI ' name="nroDocumento" id="nroDocumento" placeholder='N° Documento' value={formFamilias?.nroDocumento} />
                                 </div>                                
                                 <InputButtonLiquidacion
                                     clasess={inputButtonClasessParentesco}
+                                    array={parentescos}
+                                    onChange={onChangeValues}
+                                    idSelected={formFamilias?.iDparentesco}
                                     nameButton="..."
                                     nameLabel="Parentesco"
                                     placeholder="Parentesco"
-                                    propArrayOp="nombreObraSocial"
-                                    propIdOption="iDobraSocial"
+                                    propArrayOp="nombreParentesco"
+                                    propIdOption="iDparentesco"
                                     idInput="iDparentesco"
                                 />
                                 <div className='d-flex flex-row justify-content-start align-items-center w-100 m-0 p-0 '>
                                     <label htmlFor="" className='labelInputDate'> Nacimiento</label>
-                                    <input type="date" name="fechaNacimiento" id="fechaNacimiento" className='dateTimeClass'/>
+                                    <input type="date" onChange={(e)=>onChangeValues(e.target.value, "fechaNacimiento")} name="fechaNacimiento" id="fechaNacimiento" className='dateTimeClass' value={formFamilias?.fechaNacimiento}/>
                                     <div className='w-50'></div>
                                 </div>
                                 
                                 <InputButtonLiquidacion
                                     clasess={inputButtonClasessParentesco}
+                                    array={estudios}
+                                    onChange={onChangeValues}
+                                    idSelected={formFamilias?.iDestudios}
                                     nameButton="..."
                                     nameLabel="Estudios"
                                     placeholder="Estudios"
-                                    propArrayOp="nombreObraSocial"
-                                    propIdOption="iDobraSocial"
-                                    idInput="iDesudio"
+                                    propArrayOp="estudiosNivel"
+                                    propIdOption="iDestudios"
+                                    idInput="iDestudios"
                                 />
                             </div>
                             <div className='col-xl-6 col-lg-12 col-md-12'>
-                                <div className='d-flex flex-row justify-content-center align-items-center w-100 m-0 p-0 '>
+                                    <InputRadio
+                                        value={ formFamilias?.sexo}                            
+                                        nameFirst="Masculino"
+                                        nameSecond="Femenino"
+                                        nameLabel="Sexo"
+                                        idInput="sexo"
+                                        onChange={onChangeValues}
+                                        //datosPersonalesValue={formDatosPersonales?.inputSexo && formDatosPersonales?.inputSexo} 
+                                        obligatorio ={true}
+                                        nameThird="Otro"
+                                        //disabled={disable}
+                                    />
+                                {/* <div className='d-flex flex-row justify-content-center align-items-center w-100 m-0 p-0 '>
                                     <label htmlFor="" className='labelInputDate'> Sexo</label>
                                     <div className='d-flex flex-row justify-content-between align-items-center w-100 m-0 p-0 '>
                                         <label htmlFor="" className='labelInputRadio'> Femenino</label>
@@ -92,35 +167,43 @@ const Familias = ({index}) => {
                                         <label htmlFor="" className='labelInputRadio'> Otro</label>
                                         <input type="radio" name="fechaNacimiento" id="fechaNacimiento" className='radioClass' />
                                     </div>
-                                </div>
+                                </div> */}
                                 <InputButtonLiquidacion
                                     clasess={inputButtonClasessParentesco}
+                                    array={nacionalidades}
+                                    onChange={onChangeValues}
+                                    idSelected={formFamilias?.iDPaisOrigen}
                                     nameButton="..."
                                     nameLabel="Pais O"
                                     placeholder="Pais O"
-                                    propArrayOp="nombreObraSocial"
-                                    propIdOption="iDobraSocial"
+                                    propArrayOp="nombrePais"
+                                    propIdOption="idPais"
                                     idInput="iDPaisOrigen"
                                 />
                                 <InputButtonLiquidacion
                                     clasess={inputButtonClasessParentesco}
+                                    array={nacionalidades}
+                                    onChange={onChangeValues}
+                                    idSelected={formFamilias?.idPais}
                                     nameButton="..."
                                     nameLabel="Nacionalidad"
                                     placeholder="Nacionalidad"
-                                    propArrayOp="nombreObraSocial"
-                                    propIdOption="iDobraSocial"
+                                    propArrayOp="nacionalidad_fem"
+                                    propIdOption="idPais"
                                     idInput="idPais"
                                 />
                                 <div className='d-flex flex-row justify-content-start align-items-center w-100 m-0 p-0 '>
                                     <label htmlFor="" className='labelInputDate'> Fecha Baja</label>
-                                    <input type="date" name="fechaNacimiento" id="fechaNacimiento" className='dateTimeClass'/>
+                                    <input type="date" onChange={(e)=>onChangeValues(e.target.value, "fechaBaja")} name="fechaBaja" id="fechaBaja" className='dateTimeClass' value={formFamilias?.fechaBaja}/>
                                     <div className='w-50'></div>
                                 </div>
                                 <TextArea
                                     clasess={inputButtonClasessTextArea}
+                                    onChange={onChangeValues}
                                     nameLabel="Observ."
-                                    idInput="observacionesEstudios"
+                                    idInput="obsFamilia"
                                     maxLength="255" 
+                                    value={ formFamilias?.obsFamilia} 
                                 />
                             </div>
                         </div>
@@ -131,7 +214,8 @@ const Familias = ({index}) => {
                             </div>
                             <div className='col-12 mt-1'>
                                 <TableBasic 
-                                    columns={columns}                                     
+                                    columns={columns}   
+                                    array={familiaresEmpleado && familiaresEmpleado}                                  
                                 />
                             </div>
                         </div>

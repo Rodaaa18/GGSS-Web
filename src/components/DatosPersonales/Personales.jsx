@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {classesFormDP, inputButtonClasessParentesco, inputButtonClasessTextArea } from '../../classes/classes'
-import { getEstados, getTiposDni } from '../../redux/actions/fetchActions';
+import { getEstados, getEstudios, getPaises, getTiposDni } from '../../redux/actions/fetchActions';
 import { AXIOS_ERROR, SET_LOADING } from '../../redux/types/employeTypes';
 import Browser from '../Browser/Browser';
 import Domicilio from '../Domicilios/Domicilio';
@@ -15,19 +15,21 @@ import Liquidacion from '../Liquidacion/Liquidacion';
 import "../Home/NuevaVista.css";
 import { urls } from './urls';
 
-const Personales = ({ index, disable }) => {
+const Personales = ({ index, disable, responses, setResponses }) => {
+    const [ formDatosPersonales, setFormDatosPersonales ] = useState(responses["formDatosPersonales"]);
     const [ estadosCiviles, setEstadosCiviles ] = useState([]);
-    const [ nacionalidades, setNacionalidades ] = useState([]);
-    const [ estudios, setEstudios ] = useState([]);
+    
     const dispatch = useDispatch();
     const empleadoSeleccionado = useSelector((state)=> state.employeState.employe);
     
     const tiposDocumento = useSelector((state)=> state.fetchState.tiposDocumento);
+    const nacionalidades = useSelector((state)=> state.fetchState.paises);
+    const estudios = useSelector((state)=> state.fetchState.estudios);
     const estados = useSelector((state)=> state.fetchState.estados);
 
 
     const handleFetch = async (url, action, state) => {
-        dispatch({ type: SET_LOADING });
+        
         if(state){
             await axios
           .get(url)
@@ -36,7 +38,7 @@ const Personales = ({ index, disable }) => {
             return
           })
           .catch((err) => {
-            dispatch({ type: AXIOS_ERROR });
+            
           });
           return;
         }else{
@@ -46,7 +48,7 @@ const Personales = ({ index, disable }) => {
               dispatch(action(res.data.result));
             })
             .catch((err) => {
-              dispatch({ type: AXIOS_ERROR });
+              
             });
         }       
     };
@@ -54,15 +56,25 @@ const Personales = ({ index, disable }) => {
     useEffect(()=>{
         handleFetch(urls.urlTiposDocumentos, getTiposDni);
         handleFetch(urls.urlEstadosCiviles, setEstadosCiviles , true);  
-        handleFetch(urls.urlPaisesNac, setNacionalidades , true);
+        handleFetch(urls.urlPaisesNac, getPaises);
         handleFetch(urls.urlEstados, getEstados);  
-        handleFetch(urls.urlEstudios, setEstudios , true);  
+        handleFetch(urls.urlEstudios, getEstudios);  
     },[])
 
-    console.log(tiposDocumento)
-    function onChangeValues(){
-
+    function onChangeValues(e, key){
+        const newResponse = {...formDatosPersonales};
+        newResponse[key] = e;
+        setFormDatosPersonales({
+          ...newResponse
+        });
     }
+    useEffect(() => {  
+        setResponses({
+          ...responses,
+          formDatosPersonales
+        });    
+    },[formDatosPersonales]);
+
   return (
     
     index === 1 && <section className={index === 1 ? "transitionClassUp" : "transitionClassneDone"} >
@@ -102,7 +114,7 @@ const Personales = ({ index, disable }) => {
                                   <div className='col-xl-4 col-lg-4 col-md-12'>
                                       <InputForm
                                           clasess={classesFormDP}
-                                          value={empleadoSeleccionado?.legajo}
+                                          value={disable ? empleadoSeleccionado?.legajo : formDatosPersonales?.legajo}
                                           idInput="legajo"
                                           messageError="Solo puede contener números."
                                           placeHolder="N° Legajo"
@@ -110,43 +122,49 @@ const Personales = ({ index, disable }) => {
                                           numbers={true}
                                           obligatorio={true}
                                           disabled={disable}
+                                          onChange={onChangeValues}
                                           />
                                       <InputForm
                                           clasess={classesFormDP}
-                                          value={empleadoSeleccionado?.apellido}
+                                          value={ disable ?  empleadoSeleccionado?.apellido : formDatosPersonales?.apellido}
                                           idInput="apellido"
                                           messageError="Solo puede contener números."
                                           placeHolder="Apellidos"
                                           nameLabel="Apellidos"
                                           numbers={true}
                                           obligatorio={true}
-                                          disabled={disable} />
+                                          disabled={disable} 
+                                          onChange={onChangeValues}
+                                          />
                                       <InputForm
                                           clasess={classesFormDP}
-                                          value={empleadoSeleccionado?.nombres}
+                                          value={ disable ?  empleadoSeleccionado?.nombres : formDatosPersonales?.nombres}
                                           idInput="nombres"
                                           messageError="Solo puede contener números."
                                           placeHolder="Nombres"
                                           nameLabel="Nombres"
                                           numbers={true}
                                           obligatorio={true}
-                                          disabled={disable} />
+                                          disabled={disable} 
+                                          onChange={onChangeValues}
+                                        />
                                       <div className='d-flex flex-row justify-content-start align-items-center w-100 m-0 p-0'>
                                           <label htmlFor="" className='labelInput'>DNI</label>
-                                          <select name="" disabled={disable} className='formulario-input-InpButton-TipoDNI' id="">
+                                          <select name="" disabled={disable} onChange={(e)=> onChangeValues(e.target.value, "iDtipoDocumento")} className='formulario-input-InpButton-TipoDNI' id="iDtipoDocumento">
                                               <option value="">Seleccionar</option>
                                               {
                                                 tiposDocumento && tiposDocumento.map((item,i)=>{
-                                                    return(Number(empleadoSeleccionado?.iDtipoDocumento) === Number(item.iDtipoDocumento) ? <option selected key={i} value={item.iDtipoDocumento}>{item.tipoDocumento}</option> : <option key={i} value={item.iDtipoDocumento}>{item.tipoDocumento}</option>)
+                                                    return(Number(empleadoSeleccionado?.iDtipoDocumento) === Number(item.iDtipoDocumento) ? <option selected key={i} value={disable ? item.iDtipoDocumento : formDatosPersonales?.iDtipoDocumento}>{item.tipoDocumento}</option> : <option key={i} value={disable ? item.iDtipoDocumento : formDatosPersonales?.iDtipoDocumento}>{item.tipoDocumento}</option>)
                                                 })
                                               }
                                           </select>
                                           <input 
                                           type="text" 
                                           className='formulario-input-Legajo-TipoDNI '
-                                          value={empleadoSeleccionado?.nroDocumento} 
-                                          name="" 
-                                          id="" 
+                                          value={ disable ?  empleadoSeleccionado?.nroDocumento : formDatosPersonales?.nroDocumento} 
+                                          onChange={(e)=> onChangeValues(e.target.value, "nroDocumento")}
+                                          name="nroDocumento" 
+                                          id="nroDocumento" 
                                           placeholder='N° Documento' 
                                           disabled={disable}
                                           />
@@ -155,11 +173,12 @@ const Personales = ({ index, disable }) => {
                                           <label htmlFor="" className='labelInputDate'> CUIL</label>
                                           <input 
                                           disabled={disable}
+                                          onChange={(e)=> onChangeValues(e.target.value, "cuil")}
                                           type="text" 
-                                          name="fechaNacimiento" 
-                                          id="fechaNacimiento" 
+                                          name="cuil" 
+                                          id="cuil" 
                                           className='dateTimeClass'
-                                          value={empleadoSeleccionado?.cuil} 
+                                          value={ disable ?  empleadoSeleccionado?.cuil : formDatosPersonales?.cuil} 
                                           />
                                           <div className='d-flex flex-row justify-content-start align-items-center mt-2 btnGenerar w-50'>
                                               <button disabled={disable} className='btn btn-danger btn-sm'>Generar</button>
@@ -167,41 +186,47 @@ const Personales = ({ index, disable }) => {
                                       </div>
                                       <InputForm
                                           clasess={classesFormDP}
-                                          idInput="legajo"
+                                          idInput="telFijo"
                                           messageError="Solo puede contener números."
                                           placeHolder="Telefono"
                                           nameLabel="Telefono"
-                                          value={empleadoSeleccionado?.telFijo}
+                                          value={ disable ?  empleadoSeleccionado?.telFijo : formDatosPersonales?.telFijo}
                                           numbers={true}
                                           obligatorio={true} 
-                                          disabled={disable}/>
+                                          disabled={disable}
+                                          onChange={onChangeValues}
+                                          />
                                       <InputButtonLiquidacion
                                           clasess={inputButtonClasessParentesco}
                                           array={estadosCiviles && estadosCiviles}
-                                          idSelected={empleadoSeleccionado?.iDestadoCivil}
+                                          idSelected={disable ? empleadoSeleccionado?.iDestadoCivil : formDatosPersonales?.IdEstadoCivil}
                                           nameButton="..."
                                           nameLabel="Estado Civil"
                                           placeholder="Estado Civil"
                                           propArrayOp="masculino"
                                           propIdOption="idEstadoCivil"
                                           idInput="IdEstadoCivil" 
-                                          disabled={disable}/>
+                                          disabled={disable}
+                                          onChange={onChangeValues}
+                                          />
                                       <InputButtonLiquidacion
                                           clasess={inputButtonClasessParentesco}
                                           array={nacionalidades && nacionalidades}
-                                          idSelected={empleadoSeleccionado?.idPaisOrigen}
+                                          idSelected={disable ? empleadoSeleccionado?.idPaisOrigen : formDatosPersonales?.iDNacionalidad}
                                           nameButton="..."
                                           nameLabel="Nacionalidad"
                                           placeholder="Nacionalidad"
                                           propArrayOp="nacionalidad_masc"
                                           propIdOption="idPais"
                                           idInput="iDNacionalidad" 
-                                          disabled={disable}/>
+                                          disabled={disable}
+                                          onChange={onChangeValues}
+                                          />
                                   </div>
                                   <div className='col-xl-4 col-lg-4 col-md-12'>
                                       <InputButtonLiquidacion
                                           clasess={inputButtonClasessParentesco}
-                                          idSelected={empleadoSeleccionado?.idEstado}
+                                          idSelected={disable ? empleadoSeleccionado?.idEstado : formDatosPersonales?.IdEstado}
                                           array={estados && estados}
                                           nameButton="..."
                                           nameLabel="Estado"
@@ -209,13 +234,15 @@ const Personales = ({ index, disable }) => {
                                           propArrayOp="nombreEstado"
                                           propIdOption="idEstado"
                                           idInput="IdEstado" 
-                                          disabled={disable}/>
+                                          disabled={disable}
+                                          onChange={onChangeValues}
+                                          />
                                         <InputRadio
-                                        value={empleadoSeleccionado?.sexo && empleadoSeleccionado?.sexo}                            
+                                        value={disable ? empleadoSeleccionado?.sexo : formDatosPersonales?.sexo}                            
                                         nameFirst="Masculino"
                                         nameSecond="Femenino"
                                         nameLabel="Sexo"
-                                        idInput="inputSexo"
+                                        idInput="sexo"
                                         onChange={onChangeValues}
                                         datosPersonalesValue={empleadoSeleccionado?.sexo && empleadoSeleccionado?.sexo}
                                         //datosPersonalesValue={formDatosPersonales?.inputSexo && formDatosPersonales?.inputSexo} 
@@ -241,19 +268,21 @@ const Personales = ({ index, disable }) => {
                                       </div> */}
                                       <InputForm
                                           clasess={classesFormDP}
-                                          value={empleadoSeleccionado?.telMovil && empleadoSeleccionado?.telMovil}  
-                                          idInput="movil"
+                                          value={disable ?  empleadoSeleccionado?.telMovil : formDatosPersonales?.telMovil}  
+                                          idInput="telMovil"
                                           messageError="Solo puede contener números."
                                           placeHolder="Celular"
+                                          onChange={onChangeValues}
                                           nameLabel="Celular"
                                           numbers={true}
                                           obligatorio={true}
                                           disabled={disable} />
                                       <InputForm
                                           clasess={classesFormDP}
-                                          value={empleadoSeleccionado?.mail && empleadoSeleccionado?.mail}  
-                                          idInput="email"
+                                          value={ disable ?  empleadoSeleccionado?.mail : formDatosPersonales?.mail}  
+                                          idInput="mail"
                                           messageError="Solo puede contener números."
+                                          onChange={onChangeValues}
                                           placeHolder="Email"
                                           nameLabel="Email"
                                           numbers={true}
@@ -262,7 +291,8 @@ const Personales = ({ index, disable }) => {
                                       <InputButtonLiquidacion
                                           clasess={inputButtonClasessParentesco}
                                           array={nacionalidades && nacionalidades}
-                                          idSelected={empleadoSeleccionado?.idPaisOrigen}
+                                          idSelected={disable ? empleadoSeleccionado?.idPaisOrigen : formDatosPersonales?.iDPaisOrigen}
+                                          onChange={onChangeValues}
                                           nameButton="..."
                                           nameLabel="Pais Origen"
                                           placeholder="Pais Origen"
@@ -273,7 +303,8 @@ const Personales = ({ index, disable }) => {
                                       <InputButtonLiquidacion
                                           clasess={inputButtonClasessParentesco}
                                           array={estudios && estudios}
-                                          idSelected={empleadoSeleccionado?.iDestudios}
+                                          idSelected={disable ? empleadoSeleccionado?.iDestudios : formDatosPersonales?.iDestudios}
+                                          onChange={onChangeValues}
                                           nameButton="..."
                                           nameLabel="Estudios"
                                           placeholder="Estudios"
@@ -282,8 +313,9 @@ const Personales = ({ index, disable }) => {
                                           idInput="iDestudios" 
                                           disabled={disable}/>
                                       <TextArea
+                                        onChange={onChangeValues}
                                           clasess={inputButtonClasessTextArea}
-                                          value={empleadoSeleccionado?.obsEstudios && empleadoSeleccionado?.obsEstudios}  
+                                          value={ disable ?  empleadoSeleccionado?.obsEstudios : formDatosPersonales?.observacionesEstudios}  
                                           nameLabel="Observ."
                                           idInput="observacionesEstudios"
                                           maxLength="255" 
@@ -304,7 +336,7 @@ const Personales = ({ index, disable }) => {
                       </div>
                       
                   {/* </fieldset> */}
-                  <Domicilio />
+                  <Domicilio disable={disable} responses={responses} setResponses={setResponses}/>
                   </div>
                     </div>
                     {/* <div className='col-xl-6 col-lg-12 col-md-12'>

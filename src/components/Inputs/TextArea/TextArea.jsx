@@ -1,57 +1,66 @@
-import React from 'react'
-// import styled from 'styled-components';
+import React, { useState } from 'react'
 import './TextArea.css'
 
-const TextArea = ({inputName, maxLength, value, disabled, action, onChange, idInput, clasess, characterLimit, obligatorio, handleChange, innerHTML, nameInput, nameLabel, input}) => {
 
+const TextArea = ({ characterLimit = 255, onChange,idInput, value }) => {
+    const [input, setInput] = useState('');
 
-  (function(){
-    document.addEventListener("keyup", function(event){
-        if(event.target.matches(".count-chars")){
-            // get input value and length
-            const value = event.target.value;
-            const valueLength = event.target.value.length;
-            // get data value
-            const maxChars = parseInt(event.target.getAttribute("data-max-chars"));
-            const remainingChars = maxChars - valueLength;
-            if(valueLength > maxChars){
-                // limit chars to maxChars
-                // event.target.value = value.substr(0, maxChars)
-                return;  //end function execution
-            }
-            event.target.nextElementSibling.innerHTML = remainingChars + " caracteres restantes";
-        }
-    })
-      })();
-
- 
-
-  return (
-    clasess && <div className={`${clasess.classOne}`}>      
-    <div className={`${clasess.classTwo}`}>
-        <label className={`${clasess.classThree}`} htmlFor={nameInput}>{nameLabel}</label>
-
-        <textarea
-          placeholder="Ingrese Observaciones "
-          maxLength={characterLimit}
-          id={idInput}
-          name={idInput}
-          className={obligatorio ? `${clasess.classFour}` : `${clasess.classFour}`} 
-          onChange={handleChange}
-          value={input}
-          cols="51" 
-          rows="6"
-        />       
-        {/* <button type="button" onClick={()=>funcionCuil(nroDocumento,genre, swal)}
-              className={`${clasess.classFive}`} disabled={disabled}>
-              {nameButton}
-        </button> */}
-    </div>
+    function handleChange(event) {
+        const newInput = event.target.value;
+        setInput(newInput);
+        onChange(event.target.value,idInput )
+      }
     
-</div>
-  )
+      const charactersLeft = characterLimit - input.length;
+
+   
+return (
+    <>
+
+<div class="count-container">
+        <form>
+          <div class="input-group contTxtArea">
+            <div className="form__grupo__label pl-1 mt-3">
+              <label
+                className="form__grupo__label__label m-0"
+                htmlFor="legajo"
+              >
+                Observaciones
+              </label>
+              <div class="input-group">
+                <textarea
+                  placeholder="Ingrese Observaciones "
+                  maxLength={characterLimit}
+                  id={idInput}
+                  name={idInput}
+                  class="formulario-input-TextArea"
+                  onChange={handleChange}
+                  value={value}
+                  cols="51" 
+                  rows="6"
+                />
+               {/* (caracteres_restantes < 10) ? "Contador de caracteres: " + caracteres_restantes : "" */}
+               
+               
+                <div class="input-msg text-black">
+                  {/* Character Count: {input.length} */}
+                  {/* Characters left: {charactersLeft} */}
+                  </div>
+                {charactersLeft < 15 && (
+                  <p className="text-red">Sólo quedan {charactersLeft} caracteres</p>
+                )}
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </>
+)
 }
 
 export default TextArea
+
+
+
 
 

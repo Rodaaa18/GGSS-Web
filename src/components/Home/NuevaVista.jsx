@@ -6,6 +6,7 @@ import Browser from '../Browser/Browser';
 import Personales from '../DatosPersonales/Personales';
 import EmployeData from '../EmployeData/EmployeData';
 import Familias from '../Familia/Familias';
+import Liquidacion from '../Liquidacion/Liquidacion';
 import "./NuevaVista.css"
 
 const NuevaVista = () => {
@@ -95,7 +96,7 @@ const NuevaVista = () => {
                 </a>
             </li>
             <li className="nav-item">
-                <a href="#" className="nav-link text-truncate colorFont" onClick={()=> setIndex(2)}>
+                <a href="#" className="nav-link text-truncate colorFont" onClick={()=> setIndex(3)}>
                     <i className="fs-5 bi-sort-up-alt "></i><span className="ms-1 d-none d-sm-inline colorFont">Liquidación</span>
                 </a>
             </li>
@@ -104,7 +105,7 @@ const NuevaVista = () => {
                     <i className="fs-5 bi-journal-arrow-up"></i><span className="ms-1 d-none d-sm-inline">Licencias</span> </a>
             </li>
             <li>
-                <a href="#" className="nav-link text-truncate colorFont" onClick={()=> setIndex(3)}>
+                <a href="#" className="nav-link text-truncate colorFont" onClick={()=> setIndex(4)}>
                     <i className="fs-5 bi-hammer"></i><span className="ms-1 d-none d-sm-inline">Trabajos Anteriores</span></a>
             </li>
             <li className="dropdown">
@@ -122,11 +123,11 @@ const NuevaVista = () => {
                 </ul>
             </li>
             <li>
-                <a href="#" className="nav-link text-truncate colorFont" onClick={()=> setIndex(4)}>
+                <a href="#" className="nav-link text-truncate colorFont" onClick={()=> setIndex(5)}>
                     <i className="fs-5 bi-folder2-open"></i><span className="ms-1 d-none d-sm-inline">Documentacion</span></a>
             </li>
             <li>
-                <a href="#" className="nav-link text-truncate colorFont" onClick={()=> setIndex(5)}>
+                <a href="#" className="nav-link text-truncate colorFont" onClick={()=> setIndex(6)}>
                     <i className="fs-5 bi-explicit-fill"></i><span className="ms-1 d-none d-sm-inline">Extras</span> </a>
             </li>
         </ul>
@@ -152,6 +153,9 @@ const NuevaVista = () => {
                         }
                         {
                             index === 2 && <div className='col-xl-12 col-lg-12 col-md-12'><Familias index={index} setResponses={setResponses} responses={responses}/></div>
+                        }
+                        {
+                            index === 3 && <div className='col-xl-12 col-lg-12 col-md-12'><Liquidacion index={index} setResponses={setResponses} responses={responses}/></div>
                         }
                     </div>
                 </div>

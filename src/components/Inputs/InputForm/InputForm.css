@@ -1,0 +1,105 @@
+.formulario__grupo__inputs{
+    display: felx;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    border: 2px solid red;
+}
+.form__grupo__label{
+    grid-area: nombre;   
+    display: flex;
+    flex-flow: column;
+    justify-content: flex-end;
+    align-items: flex-start; 
+}
+.form__grupo__label__label{
+    margin: 0;
+    margin-left: 5px;
+    height: 100%;
+}
+.form__grupo__input{
+    grid-area: input;
+    margin: 0;
+    margin-left: 5px;
+}
+.form__grupo__icon{
+    grid-area: icons;
+    margin: 0;
+    margin-left: 5px;
+    font-size: 5rem;
+	margin-bottom: 0;
+	display: none;
+}
+.form__grupo__error{
+    grid-area: errors;
+    margin: 0;
+    margin-left: 5px;
+    font-size: 2rem;
+	margin-bottom: 0;
+	display: none;
+}
+.formulario-input-Legajo{
+	margin-bottom: 3px;
+	width: 100%;
+	margin-left: 0px;
+	margin-right: 0px;
+	border: none;
+	height: 42px;
+	transition: .3s ease all;
+	border-bottom: 1px solid rgb(78, 6, 6);
+}
+.formulario-input-Legajo-TipoDNI{
+    
+	width: 50%;
+	margin-left: 0px;
+	margin-right: 0px;
+	border: none;
+	height: 42px;
+	transition: .3s ease all;
+	border-bottom: 1px solid rgb(78, 6, 6);
+}
+.formulario-input-Legajo:focus{
+    background-image: linear-gradient(to bottom, transparent, rgb(189, 103, 103, 0.3));
+    outline: none;
+}
+.formulario__grupo-input {
+	display: block;
+	position: relative;
+	width: 300px;
+}
+.formulario__label {
+    font-size: small;
+	display: block;
+	font-weight: 400;
+    width: 7rem;
+}
+.formulario__label__DNI{
+    display: block;
+	font-weight: 400;
+    width: 9.5rem;
+}
+.formulario__grupo{
+	display: flex; 
+	width: 558px;
+}
+.formulario__grupo__inputs{
+    display: grid;
+    grid-template-areas: "nombre input icons error";
+    grid-template-columns: 0.4fr 1fr 0.1fr 1.5fr;
+    grid-template-rows: 1fr;
+    align-items: center;
+}
+.form-input-Piso{
+    margin-bottom: 3px;
+	width: 105%;
+	margin-left: 0px;
+	margin-right: 0px;
+	border: none;
+	height: 42px;
+	transition: .3s ease all;
+	border-bottom: 1px solid rgb(78, 6, 6);
+}
+.obligatorio{
+    background-color: rgb(253, 237, 216);
+}

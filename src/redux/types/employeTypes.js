@@ -1,0 +1,5 @@
+export const GET_EMPLEADOS = "GET_EMPLEADOS"
+export const SET_LOADING = "SET_LOADING";
+export const AXIOS_SUCCESS = "AXIOS_SUCCESS";
+export const AXIOS_ERROR = "AXIOS_ERROR";
+export const ADD_ONE_EMPLOYE = "ADD_ONE_EMPLOYE";

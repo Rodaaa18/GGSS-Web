@@ -1,0 +1,11 @@
+.inputDates{
+    margin-left: 2%;
+}
+.textboxIngreso{
+    width: 61%;
+    margin-left: 2%;
+	height: 1.5rem;
+	border: none;
+	transition: .3s ease all;
+	border-bottom: 1px solid rgb(78, 6, 6);
+}

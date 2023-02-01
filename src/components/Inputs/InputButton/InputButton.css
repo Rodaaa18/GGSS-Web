@@ -1,0 +1,181 @@
+.fomulario__container__button{
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+}
+
+.formulario-input-Legajo-Button{	
+	width: 100%;
+	height: 2rem;
+	border: none;
+	transition: .3s ease all;
+	border-bottom: 1px solid rgb(78, 6, 6);
+}
+
+.formulario-input-Button-Cuil{	
+	width: 100%;
+	height: 2rem;
+	border: none;
+	transition: .3s ease all;
+	border-radius: 0;
+	border-bottom: 1px solid rgb(78, 6, 6);
+	margin-left: 3.3rem;
+	margin-right: 1.5rem;
+}
+.formulario-input-Legajo-Button-convenio{
+	width: 81%;
+	height: 2rem;
+	border: none;
+	transition: .3s ease all;
+	border-bottom: 1px solid rgb(78, 6, 6);
+}
+.formulario-input-Legajo-Button-AsidePagos{
+	font-size: 0.8rem;
+	width: 61%;
+	height: 1.5rem;
+	border: none;
+	transition: .3s ease all;
+	border-bottom: 1px solid rgb(78, 6, 6);
+}
+.formulario__label_AsidePagos{
+	font-size: 0.8rem;
+	width: 25%;
+}
+.formulario__label_convenio{
+	color: black;
+	font-weight: 500;
+	margin-right: 2%;
+}
+.claseprueba{
+    width: 100vw;
+}
+.boton-Generar{
+	width: 110%;
+	margin-left: 68%;
+} 
+
+.formulario__grupo__inputs-Button{
+	font-size: 0.9rem;
+	display: flex;
+	flex-flow: row;
+	justify-content: flex-start;
+	align-items: center;
+}
+.formulario-input-Legajo-Button-Direccion{
+	width: 81%;
+	height: 1.5rem;
+	border: none;
+	transition: .3s ease all;
+	border-bottom: 1px solid rgb(78, 6, 6);
+}
+.formulario__label_Direccion{
+	width: 35%;
+}
+.fomulario__container__button_direccion{
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: center;
+	align-items: center;
+	width: 89%;
+}
+
+.formulario-input-InpButton{
+	width: 100%;
+	text-align: start;
+	margin-left: 0px;
+    margin-right: 0px;
+	background: #fff;
+	border: 3px solid transparent;
+	border-radius: 3px;
+	/* height: 36px; */
+	transition: .3s ease all;
+    border-bottom: 1px solid rgb(78, 6, 6);
+}
+.formulario-input-InpButton-Pagos{
+	width: 90%;
+	text-align: start;
+	margin-left: 0px;
+    margin-right: 0px;
+	background: #fff;
+	border: 3px solid transparent;
+	border-radius: 3px;
+	/* height: 36px; */
+	transition: .3s ease all;
+    border-bottom: 1px solid rgb(78, 6, 6);
+}
+.formulario-input-InpButton-Extras{
+	font-size: .9rem;
+	width: 50%;
+	text-align: start;
+	background: #fff;
+	border: 3px solid transparent;
+	border-radius: 3px;
+	/* height: 36px; */
+	transition: .3s ease all;
+    border-bottom: 1px solid rgb(78, 6, 6);
+}
+.formulario__label_Extras{
+	width: 10%;
+}
+.fomulario__container__button_extras{
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: flex-start;
+	align-items: center;
+	width: 89%;
+}
+.formulario__label_Extras-Instrum{
+	width: 15%;
+	margin-left: 2rem;
+}
+.formulario__grupo__inputs-Button-Extras{
+	display: flex;
+	flex-flow: row;
+	justify-content: flex-start;
+	align-items: center;
+	width: 100%;
+}
+.formulario__label_Extras-Afectaciones{
+	width: 13.6%;
+	margin-left: 2rem;
+}
+.formulario-input-InpButton-Extras-Af{
+	font-size: .9rem;
+	width: 46.3%;
+	text-align: start;
+	background: #fff;
+	border: 3px solid transparent;
+	border-radius: 3px;
+	/* height: 36px; */
+	transition: .3s ease all;
+    border-bottom: 1px solid rgb(78, 6, 6);
+}
+.obligatorio{
+	background-color: rgb(253, 237, 216);
+}
+.formulario-input-InpButton-TipoDNI{
+	width: 50%;
+	text-align: start;
+	margin-left: 0px;
+    margin-right: 0px;
+	background: #fff;
+	border: 3px solid transparent;
+	border-radius: 3px;
+	height: 42px; 
+	transition: .3s ease all;
+    border-bottom: 1px solid rgb(78, 6, 6);
+}
+.formulario-input-InpButton-TipoDNI-Area{
+	width: 100%;
+	text-align: start;
+	margin-left: 0px;
+    margin-right: 0px;
+	background: #fff;
+	border: 3px solid transparent;
+	border-radius: 3px;
+	height: 42px; 
+	transition: .3s ease all;
+    border-bottom: 1px solid rgb(78, 6, 6);
+}

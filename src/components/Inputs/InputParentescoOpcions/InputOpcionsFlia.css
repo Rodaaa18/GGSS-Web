@@ -1,0 +1,143 @@
+.none{
+    display: none;
+}
+
+.formulario-label-Parentesco{
+	font-style: normal;
+	font-weight: 400;
+	color: black;
+	margin-top: 0px;
+	margin-right: 20px;
+    margin-left: 0px;
+	margin-bottom: 0px;
+	display: block;
+}
+
+.formulario-label-ParentescoFlia{
+	font-style: normal;
+	font-weight: 400;
+	color: black;
+	margin-top: 0px;
+	margin-right: px;
+    margin-left: 0px;
+	margin-bottom: 0px;
+	display: block;
+}
+
+.formulario-label-ParentescoFliaOpcions{
+	font-style: normal;
+	font-weight: 400;
+	color: black;
+	margin-top: 0px;
+	margin-right: 10px;
+    margin-left: 0px;
+	margin-bottom: 0px;
+	display: block;
+}
+
+.formulario-input-ParentescoFlia{
+    margin-bottom: 3px;
+	width: 165px;
+	margin-left: 0px;
+    margin-right: 0px;
+	background: #fff;
+	border: 3px solid transparent;
+	border-radius: 3px;
+	height: 42px;
+	transition: .3s ease all;
+    border-bottom: 1px solid rgb(78, 6, 6);
+	margin-top: -5px;
+}
+
+
+.form-label-NacioFlia{
+	font-style: normal;
+	font-weight: 400;
+	color: black;
+	display: block;
+}
+
+.form-label-EstudiosFlia{
+
+	font-style: normal;
+	font-weight: 400;
+	color: black;
+	margin-top: 0px;
+	margin-right: 10px;
+    margin-left: 0px;
+	margin-bottom: 0px;
+	display: block;
+}
+.form-select-Opcions{
+	width: 100%;
+}
+
+.selectFormFlia{
+	padding: 0;
+	margin-left: 5.6rem;
+	width: 7rem;
+	background: #fff;
+	border: 3px solid transparent;
+	border-radius: 3px;
+	height: 42px;
+	transition: .3s ease all;
+    border-bottom: 1px solid rgb(78, 6, 6);
+}
+
+.btn-modal-estu{
+	margin-top: 0.5rem;
+	position: absolute;
+	left: 14.7rem;
+}
+.radio-Fijar-estu{
+	position: absolute;
+	margin-left: 24%;
+}
+.selectFormNacioFlia{
+	margin-left: 2.95%;
+	width: 53%;
+	margin-right: 0px;
+}
+
+.btn-modal-nacio{
+	margin-top: 0.2rem;
+	margin-left: 1%;
+}
+
+.SelectedFlia{
+	display: flex;
+	width: 28%;
+	margin-right: 0px;
+	margin-left: 1.9%;
+}
+
+.SelectedFliaPais{
+	display: flex;
+	width: 28%;
+	margin-right: 0px;
+	margin-left: 0.3%;
+}
+.inputCheckEstudio{
+	position: absolute;
+	left: 9%;
+}
+.labelEstuFijar{
+	position: relative;
+	left: 94%;
+}
+.obligatorio{
+	background-color: rgb(253, 237, 216);
+}
+.form-input-PaisDeOrigenFlia{
+    margin-bottom: 3px;
+	width: 10rem;
+	margin-left: 0rem;
+    margin-right: 0px;
+	background: #fff;
+	border: 3px solid transparent;
+	border-radius: 3px;
+	height: 42px;
+	transition: .3s ease all;
+    border-bottom: 1px solid rgb(78, 6, 6);
+	/* margin-top: -5px; */
+}

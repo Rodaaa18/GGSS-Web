@@ -1,0 +1,9 @@
+.selectMenu{
+    height: 35rem;    
+}
+.extendButtons{
+    position: absolute;
+    width: 97vw;
+    margin: 0;
+    padding: 0;
+}

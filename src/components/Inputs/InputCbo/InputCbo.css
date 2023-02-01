@@ -1,0 +1,139 @@
+.formulario__grupo__inputs__cbo{
+    display: grid;
+    grid-template-areas: "nombre cbo";
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    width: 100%;
+}
+
+.form__grupo__label__inp{
+    grid-area: nombre;   
+    display: grid;
+    grid-template-areas: "primer segun tercer";
+    grid-template-columns: 0.4fr 1.1fr 0.5fr;
+    grid-template-rows: 1fr;
+    width: 100%;
+    flex-flow: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    align-items: center;
+}
+.primero{
+    grid-area: primer;
+    padding-left: 0;
+}
+.segundo{
+    grid-area: segun;
+    width: 100%;
+}
+.tercero{
+    grid-area: tercer;
+    
+}
+.cuarto{
+   /* margin-left: 100px;  */
+   /* grid-area: tercer; */
+   width: 1px;
+   height: 1px;
+}
+.none{
+    display: none;
+}
+
+.formulario-input-Estado{
+	width: 167px;
+	text-align: start;
+	margin-left: 0px;
+    margin-right: 0px;
+	background: #fff;
+	border: 3px solid transparent;
+	border-radius: 3px;
+	/* height: 36px; */
+	transition: .3s ease all;
+    border-bottom: 1px solid rgb(78, 6, 6);
+}
+
+.formulario-label-Estado{
+	font-style: normal;
+	font-weight: 400;
+	color: black;
+	margin-top: 0px;
+	margin-right: 42px;
+    margin-left: 0px;
+	margin-bottom: 0px;
+	display: block;
+}
+.formulario-input-Estado:focus{
+    outline: none;      /* background-image: linear-gradient(to bottom, transparent, rgb(189, 103, 103, 0.3)); */
+}
+.formulario-input-Estado:hover{
+    border-color:  #bb2929;
+}
+.formulario-input-Estado ::after ::before{
+    border-color:  #bb2929;
+}
+.formulario-input-Estado:active{
+    border-color:  #bb2929;
+    outline: none;
+}
+.Fijar{
+    color:black;
+    margin-top: -13px;
+    margin-left: 17px;
+}
+.formulario-input-Legajo{
+	margin-bottom: 3px;
+	width: 200px;
+	margin-left: 0px;
+	margin-right: 0px;
+	border: none;
+	/* border-radius: 3px; */
+	height: 42px;
+	transition: .3s ease all;
+	border-bottom: 1px solid rgb(78, 6, 6);
+}
+.btn-validacion{
+    margin-left: 0.5rem;
+
+}
+.formulario-input-Estado-Provincias{
+    width: 167px;
+	text-align: start;
+	margin-left: 0rem;
+    margin-right: 0px;
+	background: #fff;
+	border: 3px solid transparent;
+	border-radius: 3px;
+	transition: .3s ease all;
+    border-bottom: 1px solid rgb(78, 6, 6);
+}
+.formulario-input-Estado-Licencias{
+    width: 15rem;
+	text-align: start;
+	margin-left: 0rem;
+    margin-right: 0px;
+	background: #fff;
+	border: 3px solid transparent;
+	border-radius: 3px;
+	transition: .3s ease all;
+    border-bottom: 1px solid rgb(78, 6, 6);
+}
+/* input:focus, select:focus, select, .form-select, input.form-control:focus {
+
+    outline:none !important;
+
+    outline-width: 0 !important;
+
+    box-shadow: none;
+
+    -moz-box-shadow: none;
+
+    -webkit-box-shadow: none;
+
+} */
+
+/* 
+.btn:active { background-color: red }
+.btn.btn-primary:hover { background-color: green }
+.accordion:active { background-color: red }
+.btn.btn-primary:hover { background-color: green } */

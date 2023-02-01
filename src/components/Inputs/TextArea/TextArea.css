@@ -1,0 +1,63 @@
+.form__grupo__inputs_Obs{
+    width: 220px;
+    resize: none;
+	
+}
+
+.txtArea{
+    width: 200px;
+    resize: none;
+}
+
+.txtArea:focus:active{
+    background-image: linear-gradient(to bottom, transparent, rgb(189, 103, 103, 0.3));
+}
+
+.count-container form .input-group{
+	width: 100%;
+}
+.count-container form .input-control{
+	display: block;
+	width: 100%;
+	height: 50px;
+	font-size: 14px;
+	padding: 15px;
+	
+}
+.count-container form textarea.input-control{
+	height: 140px;
+
+}
+
+.input-control :focus{
+	background-image: linear-gradient(to bottom, transparent, rgb(189, 103, 103, 0.3));
+	outline: none;
+
+}
+
+.count-container form textarea.input-control{
+	height: 140px;
+}
+.count-container form .input-msg{
+	font-size: 13px;
+	background-image: linear-gradient(to bottom, transparent, rgb(189, 103, 103, 0.3));
+	transition: .3s ease all;
+	border-bottom: 1px solid rgb(78, 6, 6);
+	/* padding-top: 4px; */
+}
+.textarea:active{
+	background-image: linear-gradient(to bottom, transparent, rgb(189, 103, 103, 0.3));
+	transition: .3s ease all;
+}
+.text-red{
+	color: red;
+}
+.text-orange{
+	color: orange;
+}
+.input-control{
+	width: 32.5rem;
+}
+.textAreaObservaciones{
+    width: 30rem;
+}

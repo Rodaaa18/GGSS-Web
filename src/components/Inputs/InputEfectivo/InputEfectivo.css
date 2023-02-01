@@ -1,0 +1,26 @@
+.checkEfectivo{
+    margin-left: 2%;
+    margin-right: 2%;
+}
+
+.checkAsigna{
+    margin-left: 2%;
+    margin-right: 2%;
+}
+.labelAsigna{
+
+}
+.selectAsigna{
+    width: 7rem;
+	text-align: start;
+	background: #fff;
+	border: 3px solid transparent;
+	border-radius: 3px;
+	transition: .3s ease all;
+    border-bottom: 1px solid rgb(78, 6, 6);
+    margin-left: 2%;
+
+}
+.obligatorio{
+    background-color: rgb(253, 237, 216);
+}

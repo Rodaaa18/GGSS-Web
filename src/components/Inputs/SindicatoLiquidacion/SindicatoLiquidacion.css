@@ -1,0 +1,12 @@
+.selectMenuSindicatos{
+    height: 2.3rem;
+    width: 12rem;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+.checkList{
+    margin-right: 3%;
+}
+.buttonSpace{
+    margin-left: 2rem;
+}

@@ -1,0 +1,89 @@
+.offcanvas.offcanvas-start{
+    width: 15vw;
+}
+.menuTitle{
+    font-size: large;
+    font-weight: 700;
+    color: rgb(155, 14, 14);
+}
+.colorFont{
+    color: rgb(78, 6, 6);
+}
+.labelInput{
+    font-size: small;
+    width: 7rem;
+}
+.labelInputDate{
+    margin-top: 0.6rem;
+    display: flex;
+    flex-flow: row;
+    justify-content: flex-start;
+    align-items: center;
+    width: 7rem;
+    font-size: small;
+    height: 35px;
+}
+.dateTimeClass{
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0.6rem;
+    height: 35px;
+    width: 50%;
+}
+.btnGenerar{
+    padding-left: 0.2rem;
+}
+.labelInputRadio{
+    margin-top: 0.6rem;
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+    align-items: center;
+    font-size: small;
+    height: 35px;
+}
+.radioClass{
+    display: flex;
+    flex-flow: row;
+    justify-content: flex-end;
+    align-items: center;
+    margin: 0.6rem 0 0 0;
+    padding: 0;
+    
+}
+.transitionClassUp{
+    animation: transition 2s;
+    transition: 0.3s;
+}
+.transitionClassneDone{
+    animation: transitionDone 2s;
+    transition: 0.3s;
+    
+}
+.formulario__label__empleador{
+    width: 7rem;
+}
+@keyframes transition{
+    0%{
+        opacity: 0;
+    }
+    50%{
+        opacity: 0.5;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+@keyframes transitionDone{
+    0%{
+        opacity: 1;
+    }
+    50%{
+        opacity: 0.5;
+    }
+    100%{
+        opacity: 0;
+    }
+}

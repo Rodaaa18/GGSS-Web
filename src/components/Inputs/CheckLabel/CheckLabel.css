@@ -1,0 +1,9 @@
+.labelForCheck{
+    display: flex;    
+    margin-left: 2%;
+}
+@media screen and (max-width: 1366px){
+    .labelForCheck{
+        font-size: small;
+    }
+}

@@ -1,0 +1,80 @@
+.none{
+    display: none;
+}
+
+.formulario-label-Parentesco{
+	font-style: normal;
+	font-weight: 400;
+	color: black;
+	margin-top: 0px;
+	margin-right: 20px;
+    margin-left: 0px;
+	margin-bottom: 0px;
+	display: block;
+}
+
+.formulario-label-ParentescoFlia{
+	font-style: normal;
+	font-weight: 400;
+	color: black;
+	margin-top: 0px;
+	margin-right: px;
+    margin-left: 0px;
+	margin-bottom: 0px;
+	display: block;
+}
+
+.formulario-label-ParentescoFliaOpcions{
+	font-style: normal;
+	font-weight: 400;
+	color: black;
+	margin-top: 0px;
+	margin-right: 10px;
+    margin-left: 0px;
+	margin-bottom: 0px;
+	display: block;
+}
+
+.formulario-input-ParentescoFlia{
+    margin-bottom: 3px;
+	width: 165px;
+	margin-left: 0px;
+    margin-right: 0px;
+	background: #fff;
+	border: 3px solid transparent;
+	border-radius: 3px;
+	height: 42px;
+	transition: .3s ease all;
+    border-bottom: 1px solid rgb(78, 6, 6);
+	margin-top: -5px;
+}
+
+
+.formulario-label-ParentescoFliaOpNac{
+	font-style: normal;
+	font-weight: 400;
+	color: black;
+	margin-top: 0px;
+	margin-right: 10px;
+    margin-left: 0px;
+	margin-bottom: 0px;
+	display: block;
+}
+
+.formulario-label-ParentescoFliaOpEstudios{
+	font-style: normal;
+	font-weight: 400;
+	color: black;
+	margin-top: 0px;
+	margin-right: 10px;
+    margin-left: 0px;
+	margin-bottom: 0px;
+	display: block;
+}
+.form-select-Opcions{
+	width: 127px;
+}
+.selectFormulario{
+	margin-left: 25%;
+	
+}

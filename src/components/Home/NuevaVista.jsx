@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Browser from '../Browser/Browser';
 import Personales from '../DatosPersonales/Personales';
+import EmployeData from '../EmployeData/EmployeData';
 import Familias from '../Familia/Familias';
 import "./NuevaVista.css"
 
@@ -91,21 +92,28 @@ const NuevaVista = () => {
             <button className="btn float-end" data-bs-toggle="offcanvas" data-bs-target="#offcanvas" role="button">
                 <i className="bi bi-list fs-3 colorFont" data-bs-toggle="offcanvas" data-bs-target="#offcanvas"></i>
             </button>
+            
             <div className='container-flex' >
-                <div className='row'>
+                <div className='row'>                    
                     <div className='col-xl-3 col-lg-12 col-md-12'>
                         <Browser setResponses={setResponses} responses={responses} setDisable={setDisable}/>
                     </div>
-                
+                    <div className='col-xl-9 col-lg-12 col-md-12'>
+                        <EmployeData />
+                        {
+                            index === 1 && <div className='col-xl-12 col-lg-12 col-md-12'><Personales setResponses={setResponses} responses={responses} disable={disable} onOff={onOff} index={index}/></div>
+                        }
+                        {
+                            index === 2 && <div className='col-xl-12 col-lg-12 col-md-12'><Familias index={index}/></div>
+                        }
+                    </div>
+                </div>
+                   
+
                           
-                  {
-                   index === 1 && <div className='col-xl-9 col-lg-12 col-md-12'><Personales setResponses={setResponses} responses={responses} disable={disable} onOff={onOff} index={index}/></div>
-                  }
-                  {
-                    index === 2 && <div className='col-xl-9 col-lg-12 col-md-12'><Familias index={index}/></div>
-                  }
+                 
                 </div> 
-            </div>
+            
         </div>
     </div>
 </div></>

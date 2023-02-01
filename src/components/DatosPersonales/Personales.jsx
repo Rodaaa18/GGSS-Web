@@ -68,6 +68,7 @@ const Personales = ({ index, disable }) => {
     index === 1 && <section className={index === 1 ? "transitionClassUp" : "transitionClassneDone"} >
             <div className='container-flex' >
                 <div className='row'>
+                    
                     {/* <div className='col-xl-3 col-lg-12 col-md-12'>
                         <Browser />
                     </div> */}

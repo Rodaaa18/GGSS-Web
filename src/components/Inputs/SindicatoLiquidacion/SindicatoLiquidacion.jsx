@@ -23,14 +23,14 @@ return (
                 {
                     array && array.map((op, i)=>{
                         return(
-                            <>    
+                            <aside key={i}>    
                                 
-                                <div class="d-flex flex-row justify-context-center align-items-center w-100" key={i} >
+                                <div class="d-flex flex-row justify-context-center align-items-center w-100"  >
                                     <input disabled={disabled} type="checkbox" name={idInput} id={`${idInput}${i}`} checked={checked[i]} onChange={(e)=> {onChange(e.target.value, idInput);const updateChecked = checked.map((item, index)=> index === i ? !item : item);
                                     setChecked(updateChecked); }} value={op[propArrayId]} className='form-check-input checkList'/>
                                     <label class="form-check-label " htmlFor="checkOption">{op[porpArrayOp]}</label>
                                 </div>
-                            </>                          
+                            </aside>                          
                         )
                     })
                 }

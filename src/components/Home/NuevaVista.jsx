@@ -10,13 +10,13 @@ import Liquidacion from '../Liquidacion/Liquidacion';
 import "./NuevaVista.css"
 
 const NuevaVista = () => {
-
+    const [ combosForm , setCombosForm ] = useState({});
     const [ index, setIndex ] = useState(0);
     const [ onOff, setOnOff ] = useState(true);
     const [ responses, setResponses ] = useState({});
     const [ disable, setDisable ] = useState(true);
     const dispatch = useDispatch();
-
+    
     
     const url = `http://54.243.192.82/api/Empleados?page=2000&ordered=true`;
     const urlEmpleadoPorApellido = `http://54.243.192.82/api/Empleados?records=10000&filter=${responses?.formBrowser?.nombreApellido ? responses?.formBrowser?.nombreApellido  : null}&ordered=true`;
@@ -155,16 +155,14 @@ const NuevaVista = () => {
                             index === 2 && <div className='col-xl-12 col-lg-12 col-md-12'><Familias index={index} setResponses={setResponses} responses={responses}/></div>
                         }
                         {
-                            index === 3 && <div className='col-xl-12 col-lg-12 col-md-12'><Liquidacion index={index} setResponses={setResponses} responses={responses}/></div>
+                            index === 3 && 
+                            <div className='col-xl-12 col-lg-12 col-md-12'>
+                                <Liquidacion index={index} setResponses={setResponses} responses={responses}/>
+                            </div>
                         }
                     </div>
                 </div>
-                   
-
-                          
-                 
                 </div> 
-            
         </div>
     </div>
 </div></>

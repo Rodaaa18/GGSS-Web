@@ -10,6 +10,8 @@ import axios from 'axios'
 const Liquidacion = ({responses, setResponses}) => {
     const [ formLiquidacion, setFormLiquidacion ] = useState(responses["formLiquidacion"]);
     const [ combosForm , setCombosForm ] = useState({});
+    const newState = {...combosForm};
+
 
     function onChangeValues(e, key){
         const newResponse = {...formLiquidacion};
@@ -25,7 +27,6 @@ const Liquidacion = ({responses, setResponses}) => {
         });    
     },[formLiquidacion]);
 
-    const newState = {...formLiquidacion};
     const handleFetch = async (url, propState) => {        
             
             await axios
@@ -48,7 +49,8 @@ const Liquidacion = ({responses, setResponses}) => {
             
             });
         };
-      useEffect(()=>{
+      
+    useEffect(()=>{
         new Promise((resolve, reject)=>{
                 resolve(
                     handleFetch("http://54.243.192.82/api/Empleadores", "empleadores"),
@@ -75,8 +77,7 @@ const Liquidacion = ({responses, setResponses}) => {
             setCombosForm(newState)
         )
       },[]);
-
-      console.log(combosForm.convenios);
+ 
 
   return (
     <div>
@@ -215,7 +216,7 @@ const Liquidacion = ({responses, setResponses}) => {
                                             <legend className="float-none w-auto  contenedorFieldSet">
                                                 <i className="fs-5 bi-info-circle "></i><span className=" d-none d-sm-inline colorFont">Info Pagos</span>
                                             </legend>
-                                            <form action="" className='norder border-3 d-flex flex-column justify-content-center align-items-start w-100 p-2'>
+                                            <aside action="" className='norder border-3 d-flex flex-column justify-content-center align-items-start w-100 p-2'>
                                             <InputButtonLiquidacion
                                                 clasess={inputButtonClasessParentesco}
                                                 array={combosForm?.formasDePago}
@@ -283,7 +284,7 @@ const Liquidacion = ({responses, setResponses}) => {
                                             <button className='btn btn-danger w-50'>
                                                 Actualización Masiva
                                             </button>
-                                            </form>
+                                            </aside>
                                         </fieldset>
                                             <InputButtonLiquidacion
                                                 clasess={inputButtonClasessParentesco}
@@ -300,7 +301,7 @@ const Liquidacion = ({responses, setResponses}) => {
                                             clasess={inputButtonClasessParentesco}
                                             nameLabel="Sindicato"
                                             array={combosForm?.sindicatos}
-                                            propArrayOp="nombreSindicato"
+                                            porpArrayOp="nombreSindicato"
                                             propIdOption="idSindicato"
                                             />
                                     </div>

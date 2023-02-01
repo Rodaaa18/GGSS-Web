@@ -48,7 +48,7 @@ const Familias = ({index, responses, setResponses}) => {
         })
       },[empleadoSeleccionado?.iDempleado])
 
-      console.log(empleadoSeleccionado?.iDempleado);
+      
 
     function onChangeValues(e, key){
         const newResponse = {...formFamilias};

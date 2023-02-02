@@ -78,7 +78,7 @@ const Liquidacion = ({responses, setResponses}) => {
         )
       },[]);
  
-
+console.log(combosForm)
   return (
     <div>
         <fieldset className="border p-2">
@@ -157,7 +157,7 @@ const Liquidacion = ({responses, setResponses}) => {
                                         />
                                         <InputButtonLiquidacion
                                             clasess={inputButtonClasessParentesco}
-                                            array={combosForm?.modosContratacion}
+                                            array={combosForm?.modosContratacion}                                                                           
                                             onChange={onChangeValues}
                                             nameButton="..."
                                             nameLabel="M. Contratac"
@@ -195,8 +195,8 @@ const Liquidacion = ({responses, setResponses}) => {
                                             nameButton="..."
                                             nameLabel="Secretaria"
                                             placeholder="Secretaria"
-                                            propArrayOp="nombreObraSocial"
-                                            propIdOption="iDobraSocial"
+                                            propArrayOp="sectorDpto"
+                                            propIdOption="iDsectorDpto"
                                             idInput="idSecretariaSector"
                                         />
                                         <InputButtonLiquidacion
@@ -293,8 +293,8 @@ const Liquidacion = ({responses, setResponses}) => {
                                                 nameButton="..."
                                                 nameLabel="Direccion"
                                                 placeholder="Direccion"
-                                                propArrayOp="nombreObraSocial"
-                                                propIdOption="iDobraSocial"
+                                                propArrayOp="direccion"
+                                                propIdOption="idDireccion"
                                                 idInput="idDireccion"
                                             />
                                             <SindicatoLiquidacion 

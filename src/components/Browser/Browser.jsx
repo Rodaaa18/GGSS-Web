@@ -162,7 +162,7 @@ const Browser = ({responses, setResponses, setDisable}) => {
               Eliminar
             </button>
           </div>
-          <div className='col-xl-9 d-flex flex-row-reverse justify-content-start align-items-center m-1'>
+         {/*  <div className='col-xl-9 d-flex flex-row-reverse justify-content-start align-items-center m-1'>
             <button
               className={`btn btn-danger btn-sm d-flex justify-content-center m-1  align-items- newClass`}
               //onClick={(e) => habilitaUpdate(e)}
@@ -175,7 +175,7 @@ const Browser = ({responses, setResponses, setDisable}) => {
             >
               Cancelar
             </button>
-          </div>
+          </div> */}
         </div>        
       </div></>
   )

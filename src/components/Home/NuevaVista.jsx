@@ -1,12 +1,16 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getEmpleados } from '../../redux/actions/emplyeActions';
 import Browser from '../Browser/Browser';
+import ButtonCallModal from '../ButtonCallModal/ButtonCallModal';
 import Personales from '../DatosPersonales/Personales';
 import EmployeData from '../EmployeData/EmployeData';
 import Familias from '../Familia/Familias';
 import Liquidacion from '../Liquidacion/Liquidacion';
+import BasicModal from '../Modals/BasicModal';
+import ChildModal from '../Modals/ChildModal';
+import { objectEstadosCiviles, propsModal } from '../Modals/props';
 import "./NuevaVista.css"
 
 const NuevaVista = () => {
@@ -16,7 +20,12 @@ const NuevaVista = () => {
     const [ responses, setResponses ] = useState({});
     const [ disable, setDisable ] = useState(true);
     const dispatch = useDispatch();
-    
+    const [showModal, setShowModal] = useState(false);
+    const [ transition, setTransition ] = useState(false);
+    const [ isOpened, setOpened ] = useState(false);
+    const openModal=()=> setOpened(true);
+    const closeModal=()=> setOpened(false);
+    const estadosCiviles = useSelector((state)=> state.fetchState.estadosCiviles);
     
     const url = `http://54.243.192.82/api/Empleados?page=2000&ordered=true`;
     const urlEmpleadoPorApellido = `http://54.243.192.82/api/Empleados?records=10000&filter=${responses?.formBrowser?.nombreApellido ? responses?.formBrowser?.nombreApellido  : null}&ordered=true`;
@@ -130,6 +139,18 @@ const NuevaVista = () => {
                 <a href="#" className="nav-link text-truncate colorFont" onClick={()=> setIndex(6)}>
                     <i className="fs-5 bi-explicit-fill"></i><span className="ms-1 d-none d-sm-inline">Extras</span> </a>
             </li>
+            <li className="dropdown">
+                <a href="#" className="nav-link dropdown-toggle  text-truncate colorFont" id="dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i className="fs-5 bi-graph-up"></i><span className="ms-1 d-none d-sm-inline">Tabla de Datos</span>
+                </a>
+                <ul className="dropdown-menu text-small shadow" aria-labelledby="dropdown">
+                    <li>
+                        <ButtonCallModal openModal={openModal} isOpened={isOpened} closeModal={closeModal} setTransition={setTransition} nameButton="Estados Civiles">
+                            <ChildModal setTransition={setTransition} array={estadosCiviles && estadosCiviles} onClose={closeModal} nameModal="Estados Civiles" propsModal={propsModal} optionsInputs={objectEstadosCiviles} transition={transition}/>
+                        </ButtonCallModal>
+                    </li>                   
+                </ul>
+            </li>            
         </ul>
     </div>
 </div>

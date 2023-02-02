@@ -1,0 +1,14 @@
+.inputModal{
+    border: none;
+    border-bottom: 2px solid rgb(78, 6, 6);
+}
+
+.inputModal:focus{
+    background-image: linear-gradient(to bottom, transparent, rgb(189, 103, 103, 0.3));
+    outline: none;
+}
+
+.inputLabelContainer{
+    display: flex;
+    align-items: center;
+}

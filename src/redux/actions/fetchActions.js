@@ -1,4 +1,4 @@
-import { GET_ESTADOS, GET_ESTUDIOS, GET_PAISES, GET_TIPOS_DNI } from "../types/fetchTypes"
+import { GET_ESTADOS, GET_ESTADOS_CIVILES, GET_ESTUDIOS, GET_PAISES, GET_TIPOS_DNI } from "../types/fetchTypes"
 
 export const getTiposDni=(payload)=>{
     return{
@@ -21,6 +21,12 @@ export const getPaises=(payload)=>{
 export const getEstudios=(payload)=>{
     return{
         type : GET_ESTUDIOS,
+        payload
+    }
+}
+export const getEstadosCiviles=(payload)=>{
+    return{
+        type : GET_ESTADOS_CIVILES,
         payload
     }
 }

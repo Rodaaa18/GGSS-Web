@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {classesFormDP, inputButtonClasessParentesco, inputButtonClasessTextArea } from '../../classes/classes'
-import { getEstados, getEstudios, getPaises, getTiposDni } from '../../redux/actions/fetchActions';
+import { getEstados, getEstadosCiviles, getEstudios, getPaises, getTiposDni } from '../../redux/actions/fetchActions';
 import { AXIOS_ERROR, SET_LOADING } from '../../redux/types/employeTypes';
 import Browser from '../Browser/Browser';
 import Domicilio from '../Domicilios/Domicilio';
@@ -17,7 +17,7 @@ import { urls } from './urls';
 
 const Personales = ({ index, disable, responses, setResponses }) => {
     const [ formDatosPersonales, setFormDatosPersonales ] = useState(responses["formDatosPersonales"]);
-    const [ estadosCiviles, setEstadosCiviles ] = useState([]);
+
     
     const dispatch = useDispatch();
     const empleadoSeleccionado = useSelector((state)=> state.employeState.employe);
@@ -26,6 +26,7 @@ const Personales = ({ index, disable, responses, setResponses }) => {
     const nacionalidades = useSelector((state)=> state.fetchState.paises);
     const estudios = useSelector((state)=> state.fetchState.estudios);
     const estados = useSelector((state)=> state.fetchState.estados);
+    const estadosCiviles = useSelector((state)=> state.fetchState.estadosCiviles);
 
 
     const handleFetch = async (url, action, state) => {
@@ -55,7 +56,7 @@ const Personales = ({ index, disable, responses, setResponses }) => {
 
     useEffect(()=>{
         handleFetch(urls.urlTiposDocumentos, getTiposDni);
-        handleFetch(urls.urlEstadosCiviles, setEstadosCiviles , true);  
+        handleFetch(urls.urlEstadosCiviles, getEstadosCiviles);  
         handleFetch(urls.urlPaisesNac, getPaises);
         handleFetch(urls.urlEstados, getEstados);  
         handleFetch(urls.urlEstudios, getEstudios);  

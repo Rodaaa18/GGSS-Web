@@ -3,13 +3,14 @@ import './InputModal.css'
 const InputModal = ({
     nameLabel,
     placeholder,
-    inputId,
+    idInput,
     value,
     action,
-    onChange
+    onChangeValues,
+    disableModal
 }) => {
 
-
+    
     return (
 
         <div className="inputModalContainer">
@@ -20,13 +21,13 @@ const InputModal = ({
                     <input
                         type="text"
                         className="inputModal"
-                        id={inputId}
-                        name={inputId}
+                        id={idInput}
+                        name={idInput}
                         placeholder={placeholder}
                         value={value}
                         // onChange={(e) => onChange(e.target.value, inputId)} // ON CHANGE NUEVO PARA LA NUEVA FUNCION (NO ANDA)
-                        onChange={(e) => onChange(e.target.value, inputId)}
-
+                        onChange={(e) => onChangeValues(e.target.value, idInput)}
+                        disabled={disableModal}
                     />
                 </div>
             </div>

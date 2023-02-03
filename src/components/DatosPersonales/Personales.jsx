@@ -15,7 +15,7 @@ import Liquidacion from '../Liquidacion/Liquidacion';
 import "../Home/NuevaVista.css";
 import { urls } from './urls';
 
-const Personales = ({ index, disable, responses, setResponses }) => {
+const Personales = ({ index, disable, responses, setResponses, refetch }) => {
     const [ formDatosPersonales, setFormDatosPersonales ] = useState(responses["formDatosPersonales"]);
 
     
@@ -60,7 +60,7 @@ const Personales = ({ index, disable, responses, setResponses }) => {
         handleFetch(urls.urlPaisesNac, getPaises);
         handleFetch(urls.urlEstados, getEstados);  
         handleFetch(urls.urlEstudios, getEstudios);  
-    },[])
+    },[refetch])
 
     function onChangeValues(e, key){
         const newResponse = {...formDatosPersonales};

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
+import swal from 'sweetalert';
 import { getEmpleados } from '../../redux/actions/emplyeActions';
 import Browser from '../Browser/Browser';
 import ButtonCallModal from '../ButtonCallModal/ButtonCallModal';
@@ -8,30 +9,45 @@ import Personales from '../DatosPersonales/Personales';
 import EmployeData from '../EmployeData/EmployeData';
 import Familias from '../Familia/Familias';
 import Liquidacion from '../Liquidacion/Liquidacion';
-import BasicModal from '../Modals/BasicModal';
 import ChildModal from '../Modals/ChildModal';
-import { objectEstadosCiviles, propsModal } from '../Modals/props';
+import { objectEstadosCiviles, objectEstudios, objectTipoDocumento, propsModal, propsModalEstudios, propsModalTiposDocumento } from '../Modals/props';
 import "./NuevaVista.css"
 
 const NuevaVista = () => {
-    const [ combosForm , setCombosForm ] = useState({});
+    const [ modalValues, setModalValues ] = useState({});
+    const [ nameModal, setNameModal ] = useState({});
     const [ index, setIndex ] = useState(0);
     const [ onOff, setOnOff ] = useState(true);
     const [ responses, setResponses ] = useState({});
     const [ disable, setDisable ] = useState(true);
-    const dispatch = useDispatch();
-    const [showModal, setShowModal] = useState(false);
     const [ transition, setTransition ] = useState(false);
-    const [ isOpened, setOpened ] = useState(false);
-    const openModal=()=> setOpened(true);
-    const closeModal=()=> setOpened(false);
-    const estadosCiviles = useSelector((state)=> state.fetchState.estadosCiviles);
+    const [ valueItemModal , setValueItemModal ] = useState({});
+    const [ modify, setModify ] = useState(false);
+    const [ refetch, setRefetch ] = useState(false);
+    const [ disableModal, setDisableMOdal ] = useState(true);
     
-    const url = `http://54.243.192.82/api/Empleados?page=2000&ordered=true`;
+
+    const dispatch = useDispatch();
+
+    const estadosCiviles = useSelector((state)=> state.fetchState.estadosCiviles);
+    const estudios = useSelector((state)=> state.fetchState.estudios);
+    const tiposDocumento = useSelector((state)=> state.fetchState.tiposDocumento);
+
+    const urlBasica = `http://54.243.192.82/api/Empleados?page=2000&ordered=true`;
     const urlEmpleadoPorApellido = `http://54.243.192.82/api/Empleados?records=10000&filter=${responses?.formBrowser?.nombreApellido ? responses?.formBrowser?.nombreApellido  : null}&ordered=true`;
     const urlEmpleadoPorLegajo = `http://54.243.192.82/api/Empleados?records=10000&legajo=${responses?.formBrowser?.legajo ? responses?.formBrowser?.legajo : null}&ordered=true`;
     const urlEmpleadoApYLegajo = `http://54.243.192.82/api/Empleados?records=10000&filter=${responses?.formBrowser?.nombreApellido  ? responses?.formBrowser?.nombreApellido  : null}&legajo=${responses?.formBrowser?.legajo ? responses?.formBrowser?.legajo : null}&ordered=true`;
     const urlApeLegOrdered = `http://54.243.192.82/api/Empleados?records=10000&filter=${responses?.formBrowser?.nombreApellido  ? responses?.formBrowser?.nombreApellido  : null}&legajo=${responses?.formBrowser?.legajo? responses?.formBrowser?.legajo : null}&ordered=true`;
+
+
+    function onChangeValues(e, key){
+        
+        const newResponse = {...modalValues};
+        newResponse[key] = e;
+        setModalValues({
+          ...newResponse
+        });
+    }
 
     async function getEmpleadosData(){
       if(responses?.formBrowser?.nombreApellido){
@@ -57,18 +73,131 @@ const NuevaVista = () => {
         });
         return;
       }else{
-        await axios.get(url).then((res) => {
+        await axios.get(urlBasica).then((res) => {
 
           dispatch(getEmpleados(res.data.result));
     
         });
       }      
     }
+    const handleClickClose=(nameModalProp)=>{
+        let newState = {...nameModal}
+    
+        newState[nameModalProp] = false;
+        setNameModal(newState);
+        setTransition(true);
+    }
 
     useEffect(()=>{
         getEmpleadosData();
     },[responses?.formBrowser?.nombreApellido , responses?.formBrowser?.legajo])
 
+
+    async function sendModalData(url, body,bodyUpdate, id){
+        if(modify){
+            try{
+                await axios
+                .put(`${url}/${id}`, bodyUpdate)
+                .then((res)=>{
+                    if(res.status === 200){
+                        setRefetch(!refetch)
+                        setModify(false);
+                        setDisableMOdal(true)
+                        return swal({
+                            title : "Ok",
+                            text : "Item actualizado con éxito",
+                            icon : "success"
+                        });
+                    }
+                    return;
+                })
+            }catch(err){
+                setModify(false);
+                setDisableMOdal(true)
+                return swal({
+                    title : "Error",
+                    text : "Error al actualizar el item" + `${err}`,
+                    icon : "error"
+                });
+            }
+            return;
+        }
+        try{
+            //debugger;
+            await axios
+            .post(url, body)
+            .then((res)=>{
+                if(res.status === 200){
+                    setRefetch(!refetch)
+                    setDisableMOdal(true)
+                    return swal({
+                        title : "Ok",
+                        text : "Item guardado con éxito",
+                        icon : "success"
+                    });
+                }
+            })
+        }catch(err){
+            setDisableMOdal(true)
+            return swal({
+                title : "Error",
+                text : "Error al guardar el item" + `${err}`,
+                icon : "error"
+            });
+        }
+    }
+    async function deleteItemModal(url, id){
+        swal({
+              title: "Desea eliminar el item?",
+              text: "Si confirma el item será borrado de la Base de Datos",
+              icon: "warning",
+              buttons: true,
+              dangerMode: true,
+            })
+            .then( async (willDelete) => {
+              if (willDelete) {
+                    try{
+                    await axios
+                        .delete(`${url}/${id}`)
+                        .then((res)=>{
+                            if(res.status === 200){
+                                setRefetch(!refetch)
+                                setDisableMOdal(true)
+                                return swal({
+                                    title : "Ok",
+                                    text : "Item eliminado con éxito",
+                                    icon : "success"
+                                });
+                            }
+                            return;
+                        })
+                }catch(err){
+                    setDisableMOdal(true)
+                    return swal({
+                        title : "Error",
+                        text : "Error al eliminar el item" + `${err}`,
+                        icon : "error"
+                    });
+                }
+              } else {
+                swal("Puede seguir operando");
+              }
+            });
+        
+    }
+    const idEstadoCivil = ((estadosCiviles && estadosCiviles[estadosCiviles.length -1] !== undefined && (estadosCiviles[estadosCiviles.length -1].idEstadoCivil))+1)
+    const bodyEstadosCiviles = {
+        idEstadoCivil : idEstadoCivil,
+        masculino : modalValues?.masculino,
+        femenino : modalValues?.femenino
+    }
+    const bodyUpdateEstadosCiviles = {
+        idEstadoCivil : valueItemModal?.idEstadoCivil,
+        masculino : modalValues?.masculino,
+        femenino : modalValues?.femenino
+    }
+    
+    const urlEstadosCiviles = "http://54.243.192.82/api/EstadosCiviles"
   return (
     <><div className="offcanvas offcanvas-start offcanvasNav" tabIndex="-1" id="offcanvas" data-bs-keyboard="false" data-bs-backdrop="false">
     <div className="offcanvas-header ">
@@ -76,36 +205,19 @@ const NuevaVista = () => {
         <button type="button" className="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div className="offcanvas-body px-0 ">
-        <ul className="nav nav-pills flex-column mb-sm-auto mb-0 align-items-start " id="menu">
-            {/*  <li className="nav-item">
-                <a href="#" className="nav-link text-truncate colorFont" onClick={()=> { setOnOff(!onOff);setIndex(0)}}>
-                    <i className="fs-5 bi-search "></i><span className="ms-1 d-none d-sm-inline colorFont">Buscar Empleado</span>
-                </a>
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Nombre/Legajo" aria-label="Search"/>                    
-                </form>
-                <div class="list-group  me-2">
-                        <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
-                            The current link item
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action">A second link item</a>
-                        <a href="#" class="list-group-item list-group-item-action">A third link item</a>
-                        <a href="#" class="list-group-item list-group-item-action">A fourth link item</a>
-                        <a class="list-group-item list-group-item-action disabled">A disabled link item</a>
-                    </div>
-            </li> */}
+        <ul className="nav nav-pills flex-column mb-sm-auto mb-0 align-items-start " id="menu">           
             <li className="nav-item">
-                <a href="#" className="nav-link text-truncate colorFont" onClick={()=> { setOnOff(!onOff);setIndex(1)}}>
+                <a  className="nav-link text-truncate colorFont" onClick={()=> { setOnOff(!onOff);setIndex(1)}}>
                     <i className="fs-5 bi-person "></i><span className="ms-1 d-none d-sm-inline colorFont">Cargar Empleado</span>
                 </a>
             </li>
             <li className="nav-item">
-                <a href="#" className="nav-link text-truncate colorFont" onClick={()=> setIndex(2)}>
+                <a href="/" className="nav-link text-truncate colorFont" onClick={()=> setIndex(2)}>
                     <i className="fs-5 bi-people-fill "></i><span className="ms-1 d-none d-sm-inline colorFont">Familia</span>
                 </a>
             </li>
             <li className="nav-item">
-                <a href="#" className="nav-link text-truncate colorFont" onClick={()=> setIndex(3)}>
+                <a href="/" className="nav-link text-truncate colorFont" onClick={()=> setIndex(3)}>
                     <i className="fs-5 bi-sort-up-alt "></i><span className="ms-1 d-none d-sm-inline colorFont">Liquidación</span>
                 </a>
             </li>
@@ -114,41 +226,74 @@ const NuevaVista = () => {
                     <i className="fs-5 bi-journal-arrow-up"></i><span className="ms-1 d-none d-sm-inline">Licencias</span> </a>
             </li>
             <li>
-                <a href="#" className="nav-link text-truncate colorFont" onClick={()=> setIndex(4)}>
+                <a href="/" className="nav-link text-truncate colorFont" onClick={()=> setIndex(4)}>
                     <i className="fs-5 bi-hammer"></i><span className="ms-1 d-none d-sm-inline">Trabajos Anteriores</span></a>
             </li>
             <li className="dropdown">
-                <a href="#" className="nav-link dropdown-toggle  text-truncate colorFont" id="dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <a href="/" className="nav-link dropdown-toggle  text-truncate colorFont" id="dropdown" data-bs-toggle="dropdown" aria-expanded={false}>
                     <i className="fs-5 bi-graph-up"></i><span className="ms-1 d-none d-sm-inline">Informes</span>
                 </a>
                 <ul className="dropdown-menu text-small shadow" aria-labelledby="dropdown">
-                    <li><a className="dropdown-item colorFont" href="#">New project...</a></li>
-                    <li><a className="dropdown-item colorFont" href="#">Settings</a></li>
-                    <li><a className="dropdown-item colorFont" href="#">Profile</a></li>
+                    <li><a className="dropdown-item colorFont" href="/">New project...</a></li>
+                    <li><a className="dropdown-item colorFont" href="/">Settings</a></li>
+                    <li><a className="dropdown-item colorFont" href="/">Profile</a></li>
                     <li>
                         <hr className="dropdown-divider"/>
                     </li>
-                    <li><a className="dropdown-item colorFont" href="#">Sign out</a></li>
+                    <li><a className="dropdown-item colorFont" href="/">Sign out</a></li>
                 </ul>
             </li>
             <li>
-                <a href="#" className="nav-link text-truncate colorFont" onClick={()=> setIndex(5)}>
+                <a href="/" className="nav-link text-truncate colorFont" onClick={()=> setIndex(5)}>
                     <i className="fs-5 bi-folder2-open"></i><span className="ms-1 d-none d-sm-inline">Documentacion</span></a>
             </li>
             <li>
-                <a href="#" className="nav-link text-truncate colorFont" onClick={()=> setIndex(6)}>
+                <a href="/" className="nav-link text-truncate colorFont" onClick={()=> setIndex(6)}>
                     <i className="fs-5 bi-explicit-fill"></i><span className="ms-1 d-none d-sm-inline">Extras</span> </a>
             </li>
             <li className="dropdown">
-                <a href="#" className="nav-link dropdown-toggle  text-truncate colorFont" id="dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <a href="/" className="nav-link dropdown-toggle  text-truncate colorFont" id="dropdown" data-bs-toggle="dropdown" aria-expanded="false">
                     <i className="fs-5 bi-graph-up"></i><span className="ms-1 d-none d-sm-inline">Tabla de Datos</span>
                 </a>
                 <ul className="dropdown-menu text-small shadow" aria-labelledby="dropdown">
                     <li>
-                        <ButtonCallModal openModal={openModal} isOpened={isOpened} closeModal={closeModal} setTransition={setTransition} nameButton="Estados Civiles">
-                            <ChildModal setTransition={setTransition} array={estadosCiviles && estadosCiviles} onClose={closeModal} nameModal="Estados Civiles" propsModal={propsModal} optionsInputs={objectEstadosCiviles} transition={transition}/>
+                        <ButtonCallModal nameModal={nameModal} setNameModal={setNameModal}  nameModalProp="estadosCiviles"  setTransition={setTransition} nameButton="Estados Civiles">
+                            <ChildModal 
+                                modalValues={modalValues} 
+                                onChangeValues={onChangeValues}  
+                                valueItemModal={valueItemModal} 
+                                setValueItemModal={setValueItemModal} 
+                                nameModalProp="estadosCiviles" 
+                                handleClickClose={handleClickClose} 
+                                setTransition={setTransition} 
+                                array={estadosCiviles && estadosCiviles}  
+                                nameModal="Estados Civiles" 
+                                propsModal={propsModal} 
+                                optionsInputs={objectEstadosCiviles} 
+                                transition={transition}
+                                functionAdd={sendModalData}
+                                urlApi={urlEstadosCiviles}
+                                bodyPetition ={bodyEstadosCiviles}
+                                bodyUpdate={bodyUpdateEstadosCiviles}
+                                modify={modify} 
+                                setModify={setModify}
+                                idAModificar={valueItemModal?.idEstadoCivil}
+                                functionDelete={deleteItemModal}
+                                disableModal={disableModal}
+                                setDisableMOdal={setDisableMOdal}
+                            />
                         </ButtonCallModal>
-                    </li>                   
+                    </li>    
+                    <li>
+                        <ButtonCallModal nameModal={nameModal} setNameModal={setNameModal}  nameModalProp="estudios" setTransition={setTransition} nameButton="Estudios">
+                            <ChildModal modalValues={modalValues} onChangeValues={onChangeValues} valueItemModal={valueItemModal} setValueItemModal={setValueItemModal} nameModalProp="estudios" handleClickClose={handleClickClose} setTransition={setTransition} array={estudios && estudios}  nameModal="Estudios" propsModal={propsModalEstudios} optionsInputs={objectEstudios} transition={transition}/>
+                        </ButtonCallModal>
+                    </li>
+                    <li>
+                        <ButtonCallModal nameModal={nameModal} setNameModal={setNameModal}  nameModalProp="tiposDocumentos" setTransition={setTransition} nameButton="Tipos Documento">
+                            <ChildModal modalValues={modalValues}  onChangeValues={onChangeValues} valueItemModal={valueItemModal} setValueItemModal={setValueItemModal} nameModalProp="tiposDocumentos" handleClickClose={handleClickClose} setTransition={setTransition} array={tiposDocumento && tiposDocumento}  nameModal="Tipos Documento" propsModal={propsModalTiposDocumento} optionsInputs={objectTipoDocumento} transition={transition}/>
+                        </ButtonCallModal>
+                    </li>                
                 </ul>
             </li>            
         </ul>
@@ -170,7 +315,7 @@ const NuevaVista = () => {
                     <div className='col-xl-9 col-lg-12 col-md-12'>
                         <EmployeData />
                         {
-                            index === 1 && <div className='col-xl-12 col-lg-12 col-md-12'><Personales setResponses={setResponses} responses={responses} disable={disable} onOff={onOff} index={index}/></div>
+                            index === 1 && <div className='col-xl-12 col-lg-12 col-md-12'><Personales refetch={refetch} setResponses={setResponses} responses={responses} disable={disable} onOff={onOff} index={index}/></div>
                         }
                         {
                             index === 2 && <div className='col-xl-12 col-lg-12 col-md-12'><Familias index={index} setResponses={setResponses} responses={responses}/></div>

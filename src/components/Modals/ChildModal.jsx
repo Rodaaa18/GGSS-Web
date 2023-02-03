@@ -1,14 +1,17 @@
-import React from 'react'
+import React, { useState } from 'react'
 import InputModal from '../Inputs/InputModal/InputModal';
 import "./BasicModal.css"
-const ChildModal = ({onClose, disabled, array , propsModal, optionsInputs, transition, setTransition}) => {
+const ChildModal = ({nameModalProp, disabled, array , propsModal, optionsInputs, transition, setTransition, handleClickClose,functionAdd, functionUpdate, functionDelete, valueItemModal, setValueItemModal, onChangeValues, modalValues, urlApi, bodyPetition, bodyUpdate,setModify, modify, idAModificar, disableModal, setDisableMOdal}) => {
+
+    
   return (
+    
     <section className={transition ? 'transitionClassUp' : ' transitionClassneDone '} >
     <div className='modalBodyClass p-2' >
         <div className="row p-2">
             <div className='d-flex flex-row justify-content-between align-items-center'>
                 <h3>{propsModal.nameModal}</h3>
-                <button className='btn btn-outline-danger btn-sm buttonModal border border-dark' onClick={()=>{onClose(); setTransition(false);}}>
+                <button className='btn btn-outline-danger btn-sm buttonModal border border-dark' onClick={()=>{handleClickClose(nameModalProp); setTransition(false);}}>
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>            
@@ -20,13 +23,14 @@ const ChildModal = ({onClose, disabled, array , propsModal, optionsInputs, trans
                     multiple
                     aria-label="multiple select example"
                     disabled={disabled}
+                    
                     >
                     {array && array.map((op, i) => {
                         return (
                         <option
                             key={i}
                             value={op && op[propsModal.propArrayId]}
-                            // onClick={() => onSelect(action, op)}  // si se rompe el abm comentar esta linea y descomentar la de abajo
+                            onClick={() => setValueItemModal(op)}  // si se rompe el abm comentar esta linea y descomentar la de abajo
                             //onClick={() => dispatch(dispatchGetID(op[propArrayId]))}
                         >
                             {op && op[propsModal.propArrayOp]}
@@ -36,9 +40,9 @@ const ChildModal = ({onClose, disabled, array , propsModal, optionsInputs, trans
                     }
                 </select>
                 <div className='d-flex flex-row justify-content-evenly align-items-center mt-1'>
-                    <button className='btn btn-success'>Agregar</button>
-                    <button className='btn btn-warning'>Modificar</button>
-                    <button className='btn btn-danger'>Eliminar</button>
+                    <button className='btn btn-success' onClick={()=> {setDisableMOdal(false)}}>Agregar</button>
+                    <button className='btn btn-warning' onClick={()=> {setModify(true);setDisableMOdal(false)}}>Modificar</button>
+                    <button className='btn btn-danger' onClick={()=> functionDelete(urlApi, idAModificar)}>Eliminar</button>
                 </div>
             </div>
             <div className='col-xl-6'>
@@ -47,18 +51,20 @@ const ChildModal = ({onClose, disabled, array , propsModal, optionsInputs, trans
                         optionsInputs.map((option, index)=>{
                             return(
                                 <InputModal
+                                    disableModal={disableModal}
                                     key={index}
                                     placeholder={option.placeholder}
                                     nameLabel = {option.label}
                                     idInput={option.idInput}
-                                    
+                                    onChangeValues={onChangeValues}
+                                    value={option.idInput === "masculino" ? modalValues?.masculino : modalValues?.femenino}
                                 />
                             )
                         })
                     }
                 </div>
                 <div className='d-flex flex-row-reverse w-100 '>
-                    <button className='btn btn-success m-1 mr-2'>
+                    <button className='btn btn-success m-1' onClick={()=>functionAdd(urlApi, bodyPetition, bodyUpdate, idAModificar)}>
                     Aceptar
                     </button>
                     <button className='btn btn-danger m-1'>

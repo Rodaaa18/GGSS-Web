@@ -35,7 +35,7 @@ const Liquidacion = ({responses, setResponses, index}) => {
                 newState[propState] = (res.data.result);            
             })
             .catch((err) => {
-            
+                console.log(err)
             });    
         };
     async function handleFetchComun(url, propState){
@@ -45,7 +45,7 @@ const Liquidacion = ({responses, setResponses, index}) => {
             newState[propState] = (res.data);
             })
             .catch((err) => {
-            
+                console.log(err)
             });
         };
       

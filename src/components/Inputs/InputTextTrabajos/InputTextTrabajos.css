@@ -1,0 +1,26 @@
+.textTrabajos{
+    width: 100%;
+}
+
+.formulario-input-TextTrabajo{
+	margin-bottom: 3px;
+    margin-left: 5%;
+	width: 95%;
+	margin-left: 0px;
+	margin-right: 0px;
+	border: none;
+	height: 42px;
+	transition: .3s ease all;
+	border-bottom: 1px solid rgb(78, 6, 6);
+}
+.formulario-input-Legajo:focus{
+    background-image: linear-gradient(to bottom, transparent, rgb(189, 103, 103, 0.3));
+    outline: none;
+}
+.buttonAceptarCancelar{
+    margin-left: 2%;
+    width: 5rem;
+}
+.textTrabAnte{
+	margin-left: 1rem;
+}

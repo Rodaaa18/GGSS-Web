@@ -1,0 +1,35 @@
+.dateTrabajos{
+    width: 35.1%;
+    padding: 0;
+    box-sizing: border-box;
+    margin-left: 4%;
+    
+
+}
+.dateTrabajos2{
+    width: 36%;
+    box-sizing: border-box;
+    margin-left: 4.5%;
+    padding: 0% ;
+}
+.checkTrabajos{
+    margin-left: 4%;
+}
+.labelTrabajos{
+    margin-left: 2%;
+}
+.cont-Desde{
+    margin-left: 1rem;
+}
+@media screen and (max-width : 1366px){
+    .cont-Desde{
+        margin: 0;
+        padding: 0;
+        margin-left: 0.5rem;
+    }
+}
+@media screen and (max-width: 1280px){
+    .dateTrabajos2{
+        /* width: 50%; */
+    }
+}

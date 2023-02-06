@@ -12,6 +12,7 @@ import Familias from '../Familia/Familias';
 import Liquidacion from '../Liquidacion/Liquidacion';
 import ChildModal from '../Modals/ChildModal';
 import { objectEstadosCiviles, objectEstudios, objectTipoDocumento, propsModal, propsModalEstudios, propsModalTiposDocumento } from '../Modals/props';
+import TrabajosAnteriores from '../TrabajosAnteriores/TrabajosAnteriores';
 import "./NuevaVista.css"
 
 const NuevaVista = () => {
@@ -249,7 +250,7 @@ const NuevaVista = () => {
     
     //#endregion
   
-
+    console.log(responses)
     return (
     <><div className="offcanvas offcanvas-start offcanvasNav" tabIndex="-1" id="offcanvas" data-bs-keyboard="false" data-bs-backdrop="false">
     <div className="offcanvas-header ">
@@ -278,7 +279,7 @@ const NuevaVista = () => {
                     <i className="fs-5 bi-journal-arrow-up"></i><span className="ms-1 d-none d-sm-inline">Licencias</span> </a>
             </li>
             <li>
-                <a href="/" className="nav-link text-truncate colorFont" onClick={()=> setIndex(5)}>
+                <a className="nav-link text-truncate colorFont" onClick={()=> setIndex(5)}>
                     <i className="fs-5 bi-hammer"></i><span className="ms-1 d-none d-sm-inline">Trabajos Anteriores</span></a>
             </li>
             <li className="dropdown">
@@ -431,6 +432,12 @@ const NuevaVista = () => {
                             index === 7 && 
                             <div className='col-xl-12 col-lg-12 col-md-12'>
                                 <Documentacion index={index} setResponses={setResponses} responses={responses}/>
+                            </div>
+                        }
+                        {
+                            index === 5 && 
+                            <div className='col-xl-12 col-lg-12 col-md-12'>
+                                <TrabajosAnteriores index={index} setResponses={setResponses} responses={responses}/>
                             </div>
                         }
                     </div>

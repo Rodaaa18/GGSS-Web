@@ -1,7 +1,7 @@
 import { useDispatch } from "react-redux";
 import "./TableBootstrap.css";
 
-const TableBasic1 = ({columns, value,documentaciones, setRefetch, refetch}) => {
+const TableBasic1 = ({columns, value,documentaciones, setRefetch, setDocumentacionSeleccionada}) => {
   
   
   const dispatch = useDispatch();
@@ -12,16 +12,16 @@ const TableBasic1 = ({columns, value,documentaciones, setRefetch, refetch}) => {
     })
     return document[0]
   }
-  console.log(documentaciones);
+ 
   return (
     <>
     <table class="table table-danger">
       <thead>
         <tr>
           {
-            columns && columns.map((col)=>{
+            columns && columns.map((col, i)=>{
               return(
-                <th scope="col">{col}</th>
+                <th key={i} scope="col">{col}</th>
               );
             })
           }
@@ -29,10 +29,10 @@ const TableBasic1 = ({columns, value,documentaciones, setRefetch, refetch}) => {
       </thead>
       <tbody>
         {
-          value && value.map((valor)=>{
+          value && value.map((valor, i)=>{
             return(
-              <tr>
-                <th scope="row"> <input type="radio" name="seleccionar" id="seleccionar" /> </th>
+              <tr key={i}>
+                <th scope="row"> <input type="radio" name="seleccionar" id="seleccionar" onClick={()=> setDocumentacionSeleccionada(valor)}/> </th>
                 <td>{valor.fecha ? valor.fecha.substring(0, valor.fecha.length -9) : "-"}</td>
                 <td>{valor.fechaVencimiento ? valor.fechaVencimiento : "-"}</td>
                 <td>{getDocumentacion(documentaciones, valor.idDocumentacion).documentacion1}</td>

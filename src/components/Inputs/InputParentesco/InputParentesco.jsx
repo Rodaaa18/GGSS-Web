@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import ButtonCallModal from "../../Buttons/ButtonCallModal";
+import ButtonCallModal from "../../ButtonCallModal/ButtonCallModal";
+
 import "./InputParentesco.css";
 
 //se agregan nuevas props idInput (que nosotros le seteamos), el value(el valor actualizado), el Estado General, y el Set del Estado General por último el onChange para que actualice en Estado General y así cambia la vista

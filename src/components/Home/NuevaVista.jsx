@@ -28,17 +28,37 @@ const NuevaVista = () => {
     
 
     const dispatch = useDispatch();
-
+    const empleadoSeleccionado = useSelector((state)=> state.employeState.employe);
     const estadosCiviles = useSelector((state)=> state.fetchState.estadosCiviles);
     const estudios = useSelector((state)=> state.fetchState.estudios);
     const tiposDocumento = useSelector((state)=> state.fetchState.tiposDocumento);
 
+    //#region -------------------------------------------------------------------------------------URLs Informes
+    const urlReporteAsignacionesFamiliares = `http://54.243.192.82/api/ReporteAsignacionesFamiliares/${empleadoSeleccionado.iDempleado},%201`;
+    const urlReporteResumenLegajo = `http://54.243.192.82/api/ResumenDeLegajo/Get?IDempleado=${empleadoSeleccionado.iDempleado}&idParametro=1`
+    const urlReporteServicio = `http://54.243.192.82/api/ReporteServicio/${empleadoSeleccionado.iDempleado},%201`;
+    const urlFichaEmpleado = `http://54.243.192.82/api/FichaEmpleado/Get?IDempleado=${empleadoSeleccionado.iDempleado}&idParametro=1`;
+
+    function onClickInfo(empleado){
+        if(empleado){
+            return;
+        }else{
+            swal({
+                title : "Error",
+                text : "Debe seleccionar un Empleado",
+                icon : "error"
+            })
+        }
+
+    }
+    //#endregion
+    //#region -------------------------------------------------------------------------------------URLs Empleados
     const urlBasica = `http://54.243.192.82/api/Empleados?page=2000&ordered=true`;
     const urlEmpleadoPorApellido = `http://54.243.192.82/api/Empleados?records=10000&filter=${responses?.formBrowser?.nombreApellido ? responses?.formBrowser?.nombreApellido  : null}&ordered=true`;
     const urlEmpleadoPorLegajo = `http://54.243.192.82/api/Empleados?records=10000&legajo=${responses?.formBrowser?.legajo ? responses?.formBrowser?.legajo : null}&ordered=true`;
     const urlEmpleadoApYLegajo = `http://54.243.192.82/api/Empleados?records=10000&filter=${responses?.formBrowser?.nombreApellido  ? responses?.formBrowser?.nombreApellido  : null}&legajo=${responses?.formBrowser?.legajo ? responses?.formBrowser?.legajo : null}&ordered=true`;
     const urlApeLegOrdered = `http://54.243.192.82/api/Empleados?records=10000&filter=${responses?.formBrowser?.nombreApellido  ? responses?.formBrowser?.nombreApellido  : null}&legajo=${responses?.formBrowser?.legajo? responses?.formBrowser?.legajo : null}&ordered=true`;
-
+    //#endregion
 
     function onChangeValues(e, key){
         
@@ -92,7 +112,7 @@ const NuevaVista = () => {
         getEmpleadosData();
     },[responses?.formBrowser?.nombreApellido , responses?.formBrowser?.legajo])
 
-
+    //#region -------------------------------------------------------------------------------------Modal Functions
     async function sendModalData(url, body,bodyUpdate, id){
         if(modify){
             try{
@@ -185,6 +205,7 @@ const NuevaVista = () => {
             });
         
     }
+    //Estados Civiles
     const idEstadoCivil = ((estadosCiviles && estadosCiviles[estadosCiviles.length -1] !== undefined && (estadosCiviles[estadosCiviles.length -1].idEstadoCivil))+1)
     const bodyEstadosCiviles = {
         idEstadoCivil : idEstadoCivil,
@@ -196,9 +217,37 @@ const NuevaVista = () => {
         masculino : modalValues?.masculino,
         femenino : modalValues?.femenino
     }
-    
-    const urlEstadosCiviles = "http://54.243.192.82/api/EstadosCiviles"
-  return (
+    //Estudios
+    const idEstudios = ((estudios && estudios[estudios.length -1] !== undefined && (estudios[estudios.length -1].iDestudios))+1)
+    const bodyEstudios = {
+        "iDestudios": idEstudios,
+        "estudiosNivel": modalValues?.estudiosNivel,
+        "id": null
+    }
+    const bodyUpdateEstudios = {
+        "iDestudios": valueItemModal?.iDestudios,
+        "estudiosNivel": modalValues?.estudiosNivel,
+        "id": null
+    }
+    //TiposDocumento
+    const iDtipoDocumento = ((tiposDocumento && tiposDocumento[tiposDocumento.length -1] !== undefined && (tiposDocumento[tiposDocumento.length -1].iDtipoDocumento))+1)
+    const bodyTiposDocumento = {
+        "iDtipoDocumento": iDtipoDocumento,
+        "tipoDocumento": modalValues?.tipoDocumento,
+        "id": null
+    }
+    const bodyUpdateTiposDocumento = {
+        "iDtipoDocumento": valueItemModal?.iDtipoDocumento,
+        "tipoDocumento": modalValues?.tipoDocumento,
+        "id": null
+    }
+    const urlEstadosCiviles = "http://54.243.192.82/api/EstadosCiviles";
+    const urlEstudios = "http://54.243.192.82/api/Estudios"
+    const urlTiposDocumentos = "http://54.243.192.82/api/TiposDocumento";
+    //#endregion
+  
+
+    return (
     <><div className="offcanvas offcanvas-start offcanvasNav" tabIndex="-1" id="offcanvas" data-bs-keyboard="false" data-bs-backdrop="false">
     <div className="offcanvas-header ">
         <h6 className="offcanvas-title d-none d-sm-block menuTitle" id="offcanvas">Menu</h6>
@@ -212,21 +261,21 @@ const NuevaVista = () => {
                 </a>
             </li>
             <li className="nav-item">
-                <a href="/" className="nav-link text-truncate colorFont" onClick={()=> setIndex(2)}>
+                <a  className="nav-link text-truncate colorFont" onClick={()=> setIndex(2)}>
                     <i className="fs-5 bi-people-fill "></i><span className="ms-1 d-none d-sm-inline colorFont">Familia</span>
                 </a>
             </li>
             <li className="nav-item">
-                <a href="/" className="nav-link text-truncate colorFont" onClick={()=> setIndex(3)}>
+                <a className="nav-link text-truncate colorFont" onClick={()=> setIndex(3)}>
                     <i className="fs-5 bi-sort-up-alt "></i><span className="ms-1 d-none d-sm-inline colorFont">Liquidación</span>
                 </a>
             </li>
             <li>
-                <a href="#submenu1" data-bs-toggle="collapse" className="nav-link text-truncate colorFont" onClick={()=> setIndex(2)}>
+                <a href="#submenu1" data-bs-toggle="collapse" className="nav-link text-truncate colorFont" onClick={()=> setIndex(4)}>
                     <i className="fs-5 bi-journal-arrow-up"></i><span className="ms-1 d-none d-sm-inline">Licencias</span> </a>
             </li>
             <li>
-                <a href="/" className="nav-link text-truncate colorFont" onClick={()=> setIndex(4)}>
+                <a href="/" className="nav-link text-truncate colorFont" onClick={()=> setIndex(5)}>
                     <i className="fs-5 bi-hammer"></i><span className="ms-1 d-none d-sm-inline">Trabajos Anteriores</span></a>
             </li>
             <li className="dropdown">
@@ -234,21 +283,18 @@ const NuevaVista = () => {
                     <i className="fs-5 bi-graph-up"></i><span className="ms-1 d-none d-sm-inline">Informes</span>
                 </a>
                 <ul className="dropdown-menu text-small shadow" aria-labelledby="dropdown">
-                    <li><a className="dropdown-item colorFont" href="/">New project...</a></li>
-                    <li><a className="dropdown-item colorFont" href="/">Settings</a></li>
-                    <li><a className="dropdown-item colorFont" href="/">Profile</a></li>
-                    <li>
-                        <hr className="dropdown-divider"/>
-                    </li>
-                    <li><a className="dropdown-item colorFont" href="/">Sign out</a></li>
+                    <li><a target="_blank" onClick={()=>onClickInfo(empleadoSeleccionado)} className="dropdown-item colorFont d-flex flex-row justify-content-start align-items-center flex-wrap btnInformes" rel="noreferrer" href={empleadoSeleccionado ? urlReporteAsignacionesFamiliares : null}>Constancia de Asignaciones Familiares</a></li>
+                    <li><a target="_blank" onClick={()=>onClickInfo(empleadoSeleccionado)} className="dropdown-item colorFont d-flex flex-row justify-content-start align-items-center flex-wrap btnInformes" rel="noreferrer" href={empleadoSeleccionado ? urlReporteResumenLegajo : null}>Resumen Legajo Empleado</a></li>
+                    <li><a target="_blank" onClick={()=>onClickInfo(empleadoSeleccionado)} className="dropdown-item colorFont d-flex flex-row justify-content-start align-items-center flex-wrap btnInformes" rel="noreferrer" href={empleadoSeleccionado ? urlReporteServicio : null}>Certificado de Servicio/Oficio</a></li>
+                    <li><a target="_blank" onClick={()=>onClickInfo(empleadoSeleccionado)} className="dropdown-item colorFont d-flex flex-row justify-content-start align-items-center flex-wrap btnInformes" rel="noreferrer" href={empleadoSeleccionado ? urlFichaEmpleado : null}>Ficha Empleado</a></li>
                 </ul>
             </li>
             <li>
-                <a href="/" className="nav-link text-truncate colorFont" onClick={()=> setIndex(5)}>
+                <a href="/" className="nav-link text-truncate colorFont" onClick={()=> setIndex(7)}>
                     <i className="fs-5 bi-folder2-open"></i><span className="ms-1 d-none d-sm-inline">Documentacion</span></a>
             </li>
             <li>
-                <a href="/" className="nav-link text-truncate colorFont" onClick={()=> setIndex(6)}>
+                <a href="/" className="nav-link text-truncate colorFont" onClick={()=> setIndex(8)}>
                     <i className="fs-5 bi-explicit-fill"></i><span className="ms-1 d-none d-sm-inline">Extras</span> </a>
             </li>
             <li className="dropdown">
@@ -286,12 +332,58 @@ const NuevaVista = () => {
                     </li>    
                     <li>
                         <ButtonCallModal nameModal={nameModal} setNameModal={setNameModal}  nameModalProp="estudios" setTransition={setTransition} nameButton="Estudios">
-                            <ChildModal modalValues={modalValues} onChangeValues={onChangeValues} valueItemModal={valueItemModal} setValueItemModal={setValueItemModal} nameModalProp="estudios" handleClickClose={handleClickClose} setTransition={setTransition} array={estudios && estudios}  nameModal="Estudios" propsModal={propsModalEstudios} optionsInputs={objectEstudios} transition={transition}/>
+                            <ChildModal 
+                                modalValues={modalValues} 
+                                onChangeValues={onChangeValues} 
+                                valueItemModal={valueItemModal} 
+                                setValueItemModal={setValueItemModal} 
+                                nameModalProp="estudios" 
+                                handleClickClose={handleClickClose} 
+                                setTransition={setTransition} 
+                                array={estudios && estudios}  
+                                nameModal="Estudios" 
+                                propsModal={propsModalEstudios} 
+                                optionsInputs={objectEstudios} 
+                                transition={transition}
+                                functionAdd={sendModalData}
+                                urlApi={urlEstudios}
+                                bodyPetition ={bodyEstudios}
+                                bodyUpdate={bodyUpdateEstudios}
+                                modify={modify} 
+                                setModify={setModify}
+                                idAModificar={valueItemModal?.iDestudios}
+                                functionDelete={deleteItemModal}
+                                disableModal={disableModal}
+                                setDisableMOdal={setDisableMOdal}
+                            />
                         </ButtonCallModal>
                     </li>
                     <li>
                         <ButtonCallModal nameModal={nameModal} setNameModal={setNameModal}  nameModalProp="tiposDocumentos" setTransition={setTransition} nameButton="Tipos Documento">
-                            <ChildModal modalValues={modalValues}  onChangeValues={onChangeValues} valueItemModal={valueItemModal} setValueItemModal={setValueItemModal} nameModalProp="tiposDocumentos" handleClickClose={handleClickClose} setTransition={setTransition} array={tiposDocumento && tiposDocumento}  nameModal="Tipos Documento" propsModal={propsModalTiposDocumento} optionsInputs={objectTipoDocumento} transition={transition}/>
+                            <ChildModal 
+                                modalValues={modalValues}  
+                                onChangeValues={onChangeValues} 
+                                valueItemModal={valueItemModal} 
+                                setValueItemModal={setValueItemModal} 
+                                nameModalProp="tiposDocumentos" 
+                                handleClickClose={handleClickClose} 
+                                setTransition={setTransition} 
+                                array={tiposDocumento && tiposDocumento}  
+                                nameModal="Tipos Documento" 
+                                propsModal={propsModalTiposDocumento} 
+                                optionsInputs={objectTipoDocumento} 
+                                transition={transition}
+                                functionAdd={sendModalData}
+                                urlApi={urlTiposDocumentos}
+                                bodyPetition ={bodyTiposDocumento}
+                                bodyUpdate={bodyUpdateTiposDocumento}
+                                modify={modify} 
+                                setModify={setModify}
+                                idAModificar={valueItemModal?.iDtipoDocumento}
+                                functionDelete={deleteItemModal}
+                                disableModal={disableModal}
+                                setDisableMOdal={setDisableMOdal}
+                                />
                         </ButtonCallModal>
                     </li>                
                 </ul>
@@ -315,10 +407,16 @@ const NuevaVista = () => {
                     <div className='col-xl-9 col-lg-12 col-md-12'>
                         <EmployeData />
                         {
-                            index === 1 && <div className='col-xl-12 col-lg-12 col-md-12'><Personales refetch={refetch} setResponses={setResponses} responses={responses} disable={disable} onOff={onOff} index={index}/></div>
+                            index === 1 && 
+                            <div className='col-xl-12 col-lg-12 col-md-12'>
+                                <Personales refetch={refetch} setResponses={setResponses} responses={responses} disable={disable} onOff={onOff} index={index}/>
+                            </div>
                         }
                         {
-                            index === 2 && <div className='col-xl-12 col-lg-12 col-md-12'><Familias index={index} setResponses={setResponses} responses={responses}/></div>
+                            index === 2 && 
+                            <div className='col-xl-12 col-lg-12 col-md-12'>
+                                <Familias index={index} setResponses={setResponses} responses={responses}/>
+                            </div>
                         }
                         {
                             index === 3 && 

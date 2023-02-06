@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import ButtonCallModal from "../../Buttons/ButtonCallModal";
+import ButtonCallModal from "../../ButtonCallModal/ButtonCallModal";
+
 import "./InputCbo.css";
 
 const InputCbo = ({nameLabel, array, value, display, nameButton, idSelected, sexo, idModal, disabled, idInput,onChange, datosPersonalesValue, action, propArrayOp,propArrayOpFem,provinciaAction,valueId, clasess, obligatorio}) => {

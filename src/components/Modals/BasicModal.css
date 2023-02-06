@@ -27,6 +27,9 @@
     animation: transition 2s;
     transition: 0.3s;
 }
+.inputModal{
+    width: 10rem;
+}
 
 @keyframes transition{
     0%{

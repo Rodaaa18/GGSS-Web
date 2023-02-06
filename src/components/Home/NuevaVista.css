@@ -65,6 +65,12 @@
 .formulario__label__empleador{
     width: 7rem;
 }
+.btnInformes{
+    z-index: 9999;
+}
+.offcanvas.offcanvas-start{
+    width: 20rem;
+}
 @keyframes transition{
     0%{
         opacity: 0;

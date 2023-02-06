@@ -7,7 +7,7 @@ import InputForm from '../Inputs/InputForm/InputForm'
 import SindicatoLiquidacion from '../Inputs/SindicatoLiquidacion/SindicatoLiquidacion'
 import axios from 'axios'
 
-const Liquidacion = ({responses, setResponses}) => {
+const Liquidacion = ({responses, setResponses, index}) => {
     const [ formLiquidacion, setFormLiquidacion ] = useState(responses["formLiquidacion"]);
     const [ combosForm , setCombosForm ] = useState({});
     const newState = {...combosForm};
@@ -38,8 +38,7 @@ const Liquidacion = ({responses, setResponses}) => {
             
             });    
         };
-    const handleFetchComun = async (url, propState) => {
-       
+    async function handleFetchComun(url, propState){
         await axios
             .get(url)
             .then((res) => {
@@ -77,10 +76,10 @@ const Liquidacion = ({responses, setResponses}) => {
             setCombosForm(newState)
         )
       },[]);
- 
-console.log(combosForm)
+ console.log(combosForm)
+
   return (
-    <div>
+    index === 3 && <div className={index === 3 ? "transitionClassUp" : "transitionClassneDone"}>
         <fieldset className="border p-2">
             <legend className="float-none w-auto p-2 contenedorFieldSet">
                 <i className="fs-5 bi-house "></i><span className="ms-1 d-none d-sm-inline colorFont">Liquidacion</span>

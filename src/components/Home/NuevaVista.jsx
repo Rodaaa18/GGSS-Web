@@ -6,6 +6,7 @@ import { getEmpleados } from '../../redux/actions/emplyeActions';
 import Browser from '../Browser/Browser';
 import ButtonCallModal from '../ButtonCallModal/ButtonCallModal';
 import Personales from '../DatosPersonales/Personales';
+import Documentacion from '../Documentacion/Documentacion';
 import EmployeData from '../EmployeData/EmployeData';
 import Familias from '../Familia/Familias';
 import Liquidacion from '../Liquidacion/Liquidacion';
@@ -205,6 +206,10 @@ const NuevaVista = () => {
             });
         
     }
+    //URLs Modales
+    const urlEstadosCiviles = "http://54.243.192.82/api/EstadosCiviles";
+    const urlEstudios = "http://54.243.192.82/api/Estudios"
+    const urlTiposDocumentos = "http://54.243.192.82/api/TiposDocumento";
     //Estados Civiles
     const idEstadoCivil = ((estadosCiviles && estadosCiviles[estadosCiviles.length -1] !== undefined && (estadosCiviles[estadosCiviles.length -1].idEstadoCivil))+1)
     const bodyEstadosCiviles = {
@@ -241,9 +246,7 @@ const NuevaVista = () => {
         "tipoDocumento": modalValues?.tipoDocumento,
         "id": null
     }
-    const urlEstadosCiviles = "http://54.243.192.82/api/EstadosCiviles";
-    const urlEstudios = "http://54.243.192.82/api/Estudios"
-    const urlTiposDocumentos = "http://54.243.192.82/api/TiposDocumento";
+    
     //#endregion
   
 
@@ -290,7 +293,7 @@ const NuevaVista = () => {
                 </ul>
             </li>
             <li>
-                <a href="/" className="nav-link text-truncate colorFont" onClick={()=> setIndex(7)}>
+                <a href="#" className="nav-link text-truncate colorFont" onClick={()=> setIndex(7)}>
                     <i className="fs-5 bi-folder2-open"></i><span className="ms-1 d-none d-sm-inline">Documentacion</span></a>
             </li>
             <li>
@@ -383,7 +386,7 @@ const NuevaVista = () => {
                                 functionDelete={deleteItemModal}
                                 disableModal={disableModal}
                                 setDisableMOdal={setDisableMOdal}
-                                />
+                            />
                         </ButtonCallModal>
                     </li>                
                 </ul>
@@ -422,6 +425,12 @@ const NuevaVista = () => {
                             index === 3 && 
                             <div className='col-xl-12 col-lg-12 col-md-12'>
                                 <Liquidacion index={index} setResponses={setResponses} responses={responses}/>
+                            </div>
+                        }
+                        {
+                            index === 7 && 
+                            <div className='col-xl-12 col-lg-12 col-md-12'>
+                                <Documentacion index={index} setResponses={setResponses} responses={responses}/>
                             </div>
                         }
                     </div>

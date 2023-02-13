@@ -1,7 +1,7 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
 
-const TableTrabajosAnteriores = ({nameLabel, columns, array, propItemOp, setModificar}) => {
+const TableTrabajosAnteriores = ({nameLabel, columns, array, setTrabajoSeleccionado, setModificar}) => {
     const dispatch = useDispatch();
 
   return (
@@ -23,15 +23,18 @@ const TableTrabajosAnteriores = ({nameLabel, columns, array, propItemOp, setModi
             <tbody>
                 {
                     array && array.map((item)=>{
+                        console.log(item.desde.length)
                         return( 
                             <tr>
-                                <th scope="row"> <input type="radio" name="selectTrabajoAnt" id="selectTrabajoAnt" value={item.idTrabajoAnterior}  /> </th>
-                                <td>{item.desde && item.desde.substring(
+                                <th scope="row"> 
+                                    <input type="radio" name="selectTrabajoAnt" onClick={()=> setTrabajoSeleccionado(item)} id="selectTrabajoAnt" value={item.idTrabajoAnterior}  /> 
+                                </th>
+                                <td>{item?.desde.length === 19 ? (item.desde && item.desde.substring(
                                                 0,
                                                 item.desde.length - 9
-                                                )}
+                                                )) : item.desde}
                                 </td>
-                                <td>{item.hasta && item.hasta ? item.hasta.substring(0, item.hasta.length -9) : "Actualidad"}</td>
+                                <td>{item.hasta?.length === 19 ? (item?.hasta && item.hasta ? item.hasta.substring(0, item.hasta.length -9) : "Actualidad") : (item?.hasta && item?.hasta ? item.hasta : "Actualidad")}</td>
                                 <td>{item.descripcion}</td>
                             </tr>
                         )

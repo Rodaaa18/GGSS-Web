@@ -20,14 +20,14 @@
     /* border-bottom: 1px solid rgb(78, 6, 6); */
 }
 .secondCheck2{
-	height: 35px;
+	margin: 1%;
 }
 .secondCheck{
-	height: 35px;
 	margin-top: 0.1rem;
 }
 
 .secondCheckDocs{
-	margin-left: 6.5%;
+	margin-left: 1.2rem;
+	width: 9rem;
 }
 

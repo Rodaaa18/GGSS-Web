@@ -4,25 +4,36 @@ import "./InputFile.css";
 import imagenAlt from "./cambieImagen.png";
 import { useDispatch } from "react-redux";
 
-function InputFile({ disabled, imagen,onChange, idInput,action }) {
-  const [ImageSelectedPrevious, setImageSelectedPrevious] = useState(null);
-  const [displayButton, setDisplayButton] = useState("");
-
+function InputFile({ disabled, imagen,onChange, idInput,action, ImageSelectedPrevious, setImageSelectedPrevious, setRefectch, refetch }) {
   
-  
-  const changeImage = (e) => {
-    console.log(e.target.files);
-    if (e.target.files[0] !== undefined) {
-      const reader = new FileReader();
-      reader.readAsDataURL(e.target.files[0]);
-      reader.onload = (e) => {
-        e.preventDefault();
-       
-        setImageSelectedPrevious(e.target.result); // le damos el binario de la imagen para mostrarla en pantalla
-        setDisplayButton("none");
+  const changeImage = (event) => {
+    const imageFile = event.target.files[0];
+    const blob = new Blob([imageFile], { type: imageFile.type });
+    
+    const reader = new FileReader();
+    reader.readAsDataURL(blob);
+    reader.onloadend = () => {
+      const imageDataURL = reader.result;
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const image = new Image();
+      image.src = imageDataURL;
+      image.onload = () => {
+        canvas.width = image.width;
+        canvas.height = image.height;
+        ctx.drawImage(image, 0, 0);
+        const pngImageDataURL = canvas.toDataURL('image/png');
+        // Usar pngImageDataURL aquí
+        onChange(pngImageDataURL, idInput)
+        setImageSelectedPrevious(pngImageDataURL);
+        
       };
-    }
+    };
+    setRefectch(!refetch)
   };
+  
+  
+  
 
   useEffect(() => {
     disableBtn();
@@ -30,16 +41,14 @@ function InputFile({ disabled, imagen,onChange, idInput,action }) {
 
   function disableBtn() {
     if (disabled) {
-      setDisplayButton("none");
       return;
     }
-    setDisplayButton("");
   }
   function acivatedInput(e) {
     e.preventDefault();
     setImageSelectedPrevious(null);
-    setDisplayButton("");
   }
+
   return (
     <>
       <div>
@@ -57,17 +66,9 @@ function InputFile({ disabled, imagen,onChange, idInput,action }) {
               id={idInput}
               name={idInput}
               accept="image/png, image/jpg"
-              onChange = {(e)=>{ 
-                if (e.target.files[0] !== undefined) {
-                const reader = new FileReader();
-                reader.readAsDataURL(e.target.files[0]);
-                reader.onload = (e) => {
-                  e.preventDefault();
-                  onChange(e.target.result, idInput)
-                  
-                  setImageSelectedPrevious(e.target.result); // le damos el binario de la imagen para mostrarla en pantalla
-                  setDisplayButton("none");
-                };}}}
+              onChange={(e) => {
+                changeImage(e);
+              }} 
               multiple
               width="220px"
               height="100px"
@@ -79,7 +80,7 @@ function InputFile({ disabled, imagen,onChange, idInput,action }) {
                 src={
                   ImageSelectedPrevious === null ||
                   ImageSelectedPrevious === undefined
-                    ? imagen : ImageSelectedPrevious
+                    ? `data:image/png;base64,${imagen}` : ImageSelectedPrevious
                 }
                 alt=""
               />

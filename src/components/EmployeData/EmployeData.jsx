@@ -13,7 +13,7 @@ const EmployeData = ({disabled}) => {
     <div className='container-flex d-flex flex-row justify-content-start align-items-center'>
         <div className='row w-100'>
             <div className='col-xl-2'>
-                <img src={empleadoSeleccionado && empleadoSeleccionado.obsFechaIngreso} alt=""className='border border-1 imgData' />
+                <img src={`data:image/png;base64,${empleadoSeleccionado && empleadoSeleccionado.imagen}`} alt=""className='border border-1 imgData' />
             </div>
             <div className='col-xl-5 d-flex flex-column justify-content-start align-items-center '>
                 <InputEmpData

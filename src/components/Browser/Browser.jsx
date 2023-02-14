@@ -142,7 +142,7 @@ const Browser = ({responses, setResponses, setDisable}) => {
       </div>
     </fieldset><div className=" extendButtons">
         <div className="row">
-          <div className="col-xl-2 d-flex flex-row justify-content-start align-items-center m-1">
+          <div className="col-xl-2 d-flex flex-row justify-content-between align-items-center m-1 w-100">
             <button
               className={`btn btn-danger btn-sm d-flex justify-content-center m-1  align-items- newClass`}
               onClick={habilitaEdit}

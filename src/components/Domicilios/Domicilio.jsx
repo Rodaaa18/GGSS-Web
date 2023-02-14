@@ -4,36 +4,35 @@ import { useDispatch, useSelector } from 'react-redux'
 import swal from 'sweetalert'
 import { classesFormDP, inputButtonClasessParentesco } from '../../classes/classes'
 import { AXIOS_ERROR, SET_LOADING } from '../../redux/types/employeTypes'
-import { urlsDomicilios } from '../DatosPersonales/urls'
+import "./Domicilio.css"
 import InputButtonLiquidacion from '../Inputs/InputButton/InputButtonLiquidacion'
 import InputForm from '../Inputs/InputForm/InputForm'
 import TablaDomicilios from '../Tables/TablaDomicilios'
+import { setRefetch } from '../../redux/actions/fetchActions'
+import { deleteDomicilio, getDomicilios, saveIdDom } from '../../redux/actions/domicilioActions'
+import { urlsDomicilios } from '../ServiceComponent/urls'
 
-const Domicilio = ({disable, responses, setResponses}) => {
+
+const Domicilio = ({disable, responses, setResponses, combosForm , setCombosForm}) => {
     const [ formDomicilios, setFormDomicilios ] = useState(responses["formDomicilios"]);
     const empleadoSeleccionado = useSelector((state)=> state.employeState.employe);
-    const [ domiciliosInfo, setDomiciliosInfo ] = useState([]);
-    const [ combosForm , setCombosForm ] = useState({
-        calles : [],
-        provincias : [],
-        dptos : [],
-        localidades : [],
-        barrios : []
-    })
+    
     const [ provinciaSelected, setProvinciaSelected ] = useState();
     const [ departamentoSelected, setDepartamentoSelected ] = useState();
     const [ localidadSelected, setLocalidadSelected ] = useState();
     const [checked, setChecked] = useState(false);
-
-
-    const newState = {...combosForm};
     const dispatch = useDispatch();
+    const refetch = useSelector((state)=> state.fetchState.refetch);
+    const domiciliosDelEmpleado = useSelector((state)=> state.domiciliosState.domiciliosEmpleado);
+    const domicilioSeleccionado = useSelector((state)=> state.domiciliosState.domicilioSelected);
+    const idsDomicilio = useSelector((state)=> state.domiciliosState.idsDom);
+
     async function getDomiciliosPorEmpleado(){
         if(empleadoSeleccionado){
             try{
                 await axios.get(`http://54.243.192.82/api/sp_DomiciliosDatosxIdEmpleado?IdEmpleado=${empleadoSeleccionado?.iDempleado}`)
                 .then((res)=>{
-                  setDomiciliosInfo(res.data);
+                  dispatch(getDomicilios(res.data));
                 })
             }catch(err){
                 swal({
@@ -46,20 +45,9 @@ const Domicilio = ({disable, responses, setResponses}) => {
     }
     useEffect(()=>{
         getDomiciliosPorEmpleado();
-    },[empleadoSeleccionado?.iDempleado])
+    },[empleadoSeleccionado?.iDempleado, refetch])
 
-    const handleFetch = async (url, action, propState) => {        
-        
-        await
-          axios
-          .get(url)
-          .then((res) => {
-            newState[propState] = (res.data.result);            
-          })
-          .catch((err) => {
-           
-          });    
-      };
+    
       const handleChangePredeterminado=(e, key)=>{
         setChecked(!checked)
         const newResponse = {...formDomicilios};
@@ -83,20 +71,7 @@ const Domicilio = ({disable, responses, setResponses}) => {
     },[formDomicilios]);
 
 
-      useEffect(()=>{
-        new Promise((resolve, reject)=>{
-                resolve(
-                    handleFetch("http://54.243.192.82/api/Calles", setCombosForm, "calles"),
-                    handleFetch("http://54.243.192.82/api/Departamentos", setCombosForm, "dptos"),
-                    handleFetch("http://54.243.192.82/api/Provincias", setCombosForm, "provincias"),
-                    handleFetch("http://54.243.192.82/api/Localidades", setCombosForm, "localidades"),
-                    handleFetch("http://54.243.192.82/api/Barrios", setCombosForm, "barrios")
-                    )
-            }
-            ).then(
-            setCombosForm(newState)
-        )
-      },[])
+      
 
        const arrayDepartamentos = provinciaSelected && combosForm?.dptos.filter((departamento) => departamento.idProvincia === provinciaSelected.idProvincia);
 
@@ -105,8 +80,6 @@ const Domicilio = ({disable, responses, setResponses}) => {
     
     
       const arrayBarrios = localidadSelected&&  combosForm?.barrios.filter((barrio) => barrio.idLocalidad === localidadSelected.idLocalidad); 
-     
-    
     const columns = [
         "Predeterminado",
         "Calle",
@@ -115,6 +88,38 @@ const Domicilio = ({disable, responses, setResponses}) => {
         "Piso/Of/Dpto",
         "Provincia",
       ];
+    async function guardarDomicilio(e){
+        e.preventDefault();
+        try{
+            await axios.post(`http://54.243.192.82/api/sp_DomiciliosGuarda?idDomicilio=0&idCalle=${formDomicilios?.idCalle}&Numero=${formDomicilios?.nroCalle}&idBarrio=${formDomicilios?.idBarrio}&Dpto=${formDomicilios?.idDepartamento}&Predeterminado=${formDomicilios?.predeterminado}&IdEmpleado=${empleadoSeleccionado?.iDempleado}`,{
+                headers: {
+                  'Access-Control-Allow-Origin' : '*'
+                }})
+            .then((res)=>{
+                if(res.status === 200){
+                    dispatch(setRefetch(!refetch));
+                    swal({
+                    title: "Domicilio Agregado",
+                    text: "Domicilio agregado con éxito",
+                    icon: "success",
+                  }) 
+                }
+            });
+        }catch(err){
+            return swal({
+                title: "Error",
+                text: "Debe completar todos los campos",
+                icon: "error",
+              })
+        }
+    }
+    function deleteDomicilios (e, id){
+        console.log(id)
+        e.preventDefault();
+        dispatch(deleteDomicilio(Number(id)))
+        dispatch(saveIdDom(Number(id)));   
+      }
+      console.log(idsDomicilio)
   return (
     <div className=''>
         {/* <fieldset className="border p-2">
@@ -248,11 +253,19 @@ const Domicilio = ({disable, responses, setResponses}) => {
                                 </div>
                             </div>
                             <div className='row'>
+                                <div className="col-xl-12 d-flex flex-row-reverse justify-content-start align-items-center">
+                                    <button className='btn btn-success btn-sm buttonAgregarTable m-1'onClick={(e)=> guardarDomicilio(e)}>
+                                        +
+                                    </button>
+                                    <button className='btn btn-danger btn-sm buttonAgregarTable m-1' onClick={(e)=> deleteDomicilios(e,domicilioSeleccionado?.idDomicilio)}>
+                                        -
+                                    </button>
+                                </div>
                                 <div className='col-12'>
                                     <TablaDomicilios 
-                                    columns={columns}
-                                    value={domiciliosInfo && domiciliosInfo}
-                                    disabled={disable}
+                                        columns={columns}
+                                        value={domiciliosDelEmpleado && domiciliosDelEmpleado}
+                                        disabled={disable}
                                     />
                                 </div>
 
@@ -267,3 +280,4 @@ const Domicilio = ({disable, responses, setResponses}) => {
 }
 
 export default Domicilio
+

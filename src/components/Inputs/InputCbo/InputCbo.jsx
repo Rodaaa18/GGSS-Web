@@ -61,14 +61,14 @@ const InputCbo = ({nameLabel, array, value, display, nameButton, idSelected, sex
                 </select>
             </div>
 
-            {mostrarComponente && <div>
+            {/* {mostrarComponente && <div>
               <ButtonCallModal 
                 className={mostrarComponente ? clasess.classSeven : "none"} 
                 idModal={idModal} nameButton={nameButton} useNavbar={false} useButton={true} disabled={disabled}>
                 {nameButton}
               </ButtonCallModal>
            
-            </div>}
+            </div>} */}
             
         </div>
       </div>
@@ -108,11 +108,11 @@ const InputCbo = ({nameLabel, array, value, display, nameButton, idSelected, sex
                     }
                 </select>
             </div>
-            {mostrarComponente && <div>
+            {/* {mostrarComponente && <div>
               <ButtonCallModal className={mostrarComponente ? "tercero btn btn-validacion btn-outline-danger btn-sm ml-2 " : "none"} idModal={idModal} nameButton={nameButton} useNavbar={false} useButton={true} disabled={disabled}>
                 {nameButton}
               </ButtonCallModal>
-            </div>}
+            </div>} */}
         </div>
       </div>
   );

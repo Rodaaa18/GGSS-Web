@@ -1,4 +1,4 @@
-import { GET_ESTADOS, GET_ESTADOS_CIVILES, GET_ESTUDIOS, GET_PAISES, GET_TIPOS_DNI } from "../types/fetchTypes";
+import { GET_ESTADOS, GET_ESTADOS_CIVILES, GET_ESTUDIOS, GET_PAISES, GET_TIPOS_DNI, REFETCH } from "../types/fetchTypes";
 
 
 const initialState = {
@@ -6,7 +6,8 @@ const initialState = {
     estados : "",
     paises : "",
     estudios : "",
-    estadosCiviles : ""
+    estadosCiviles : "",
+    refetch : false
 }
 export const fetchReducer=(state = initialState, action)=>{
     const { type , payload } = action;
@@ -40,6 +41,12 @@ export const fetchReducer=(state = initialState, action)=>{
             return{
                 ...state,
                 estadosCiviles : payload
+            }
+        }
+        case REFETCH :{
+            return{
+                ...state,
+                refetch : payload
             }
         }
         default : return state;

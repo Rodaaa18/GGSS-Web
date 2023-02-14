@@ -7,10 +7,10 @@ import InputForm from '../Inputs/InputForm/InputForm'
 import SindicatoLiquidacion from '../Inputs/SindicatoLiquidacion/SindicatoLiquidacion'
 import axios from 'axios'
 
-const Liquidacion = ({responses, setResponses, index}) => {
+const Liquidacion = ({responses, setResponses, index, combosForm , setCombosForm}) => {
     const [ formLiquidacion, setFormLiquidacion ] = useState(responses["formLiquidacion"]);
-    const [ combosForm , setCombosForm ] = useState({});
-    const newState = {...combosForm};
+    
+   
 
 
     function onChangeValues(e, key){
@@ -27,67 +27,12 @@ const Liquidacion = ({responses, setResponses, index}) => {
         });    
     },[formLiquidacion]);
 
-    const handleFetch = async (url, propState) => {        
-            
-            await axios
-            .get(url)
-            .then((res) => {
-                newState[propState] = (res.data.result);            
-            })
-            .catch((err) => {
-                console.log(err)
-            });    
-        };
-    async function handleFetchComun(url, propState){
-        await axios
-            .get(url)
-            .then((res) => {
-            newState[propState] = (res.data);
-            })
-            .catch((err) => {
-                console.log(err)
-            });
-        };
+    
+    
+       
       
-    async function fetchingData(){
-        if(index === 3){
-            
-            try{
-                await new Promise((resolve, reject)=>{
-                    
-                    resolve(
-                        handleFetch("http://54.243.192.82/api/Empleadores", "empleadores"),
-                        handleFetch("http://54.243.192.82/api/Convenios", "convenios"),
-                        handleFetch("http://54.243.192.82/api/Categorias", "categorias"),
-                        handleFetch("http://54.243.192.82/api/Agrupamientos", "agrupamientos"),
-                        handleFetch("http://54.243.192.82/api/Cargos", "cargos"),
-                        handleFetch("http://54.243.192.82/api/TareasDesempeñadas", "tareasDesempeñadas"),
-                        handleFetch("http://54.243.192.82/api/ModosContratacion", "modosContratacion"),
-                        handleFetch("http://54.243.192.82/api/ModosLiquidacion", "modosLiquidacion"),
-                        handleFetch("http://54.243.192.82/api/CentrosDeCostos", "centrosDeCosto"),
-                        handleFetchComun("http://54.243.192.82/api/SectoresDptos/0,%201", "sectores"),
-                        handleFetch("http://54.243.192.82/api/ObrasSociales", "obrasSociales"),
-                        handleFetch("http://54.243.192.82/api/FormasdePagos", "formasDePago"),
-                        handleFetch("http://54.243.192.82/api/LugaresdePago", "lugaresDePago"),
-                        handleFetch("http://54.243.192.82/api/Bancos", "bancos"),
-                        handleFetchComun("http://54.243.192.82/api/Direcciones/DireccionesDatos/0,1", "direcciones"),
-                        handleFetch("http://54.243.192.82/api/Sindicatos", "sindicatos"),
-                        handleFetch("http://54.243.192.82/api/Esquemas", "esquemas"),
-                        handleFetchComun("http://54.243.192.82/api/ConceptosDatos/0,1", "conceptos")
-                        )
-                }
-                ).then(
-                setCombosForm(newState)
-            )
-            }catch(e){
-                return e;
-            }
-        }
-        return;
-    }
-    useEffect(()=>{
-        fetchingData();
-      },[]);
+    
+ 
 
  console.log(combosForm)
 

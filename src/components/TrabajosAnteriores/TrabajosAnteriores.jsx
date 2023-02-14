@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import swal from 'sweetalert';
+import { setRefetch } from '../../redux/actions/fetchActions';
 import { addTrabajoAnterior, deleteTaEmpleado, getTrabajosAnteriores, getTrabajosAnterioresPorEmpleados, saveIdsTa } from '../../redux/actions/trabajosAnterioresActions';
 import InputTextTrabajos from '../Inputs/InputTextTrabajos/InputTextTrabajos';
 import TableTrabajosAnteriores from '../Tables/TableTrabajosAnteriores';
@@ -11,7 +12,6 @@ const TrabajosAnteriores = ({responses, setResponses, disable, index}) => {
     const [checked , setChecked] = useState(false);
     const [disabled , setDisabled] = useState(false);
     const [ modificar, setModificar ] = useState(false);
-    const [ refetch, setRefetch ] = useState(false);
     const [ formTrabajosAnteriores, setFormTrabajosAnteriores ] = useState(responses["formTrabajosAnteriores"]);
     const [ trabajoSeleccionado, setTrabajoSeleccionado ] = useState({});
     const dispatch = useDispatch();
@@ -20,23 +20,12 @@ const TrabajosAnteriores = ({responses, setResponses, disable, index}) => {
     const columns = ["Seleccionar" , "Desde" , "Hasta", "Descripción"];
     //const trabajoAnterior = useSelector((state)=> state.trabajosAnteriores.trabajoAnterior);
     const trabajoAnterior = {};
-    const urlTrabajosAnteriores = "http://54.243.192.82/api/TrabajosAnteriores"
+    const refetch = useSelector((state)=> state.fetchState.refetch);
     const urlTrabajosAnterioresPost = `http://54.243.192.82/api/TrabajosAnteriores?IdTrabajoAnterior=0&IdEmpleado=${empleadoSeleccionado?.iDempleado}&Desde=${formTrabajosAnteriores?.desde}&Hasta=${formTrabajosAnteriores?.hasta}&Actualidad=${formTrabajosAnteriores?.actualidad ? formTrabajosAnteriores?.actualidad : false}&Descripcion=${formTrabajosAnteriores?.descripcion}`;
 
     let trabajosAnterioresDelEmpleado = trabajosAnteriores && trabajosAnteriores.filter((trabajo)=> trabajo.idEmpleado === empleadoSeleccionado.iDempleado);
-    const handleFetch=(url, action )=>{
-        axios.get(url)
-        .then((res)=>{
-        dispatch( action(res.data.result));
-        })
-        .catch((err)=>{
-        
-        })
-    }
+    
 
-    useEffect(()=>{
-        handleFetch(urlTrabajosAnteriores, getTrabajosAnteriores);
-    },[refetch,empleadoSeleccionado?.iDempleado])
 
     function onChangeValues(e, key){
         const newResponse = {...formTrabajosAnteriores};
@@ -53,7 +42,7 @@ const TrabajosAnteriores = ({responses, setResponses, disable, index}) => {
         });      
     },[formTrabajosAnteriores]);
 
-    /* async function getTrabajosanterioresPorEmpleado(){
+     async function getTrabajosanterioresPorEmpleado(){
         if(empleadoSeleccionado){
             try{
                 await axios.get(`http://54.243.192.82/api/TrabajosAnteriores/${empleadoSeleccionado?.iDempleado}`)
@@ -69,7 +58,7 @@ const TrabajosAnteriores = ({responses, setResponses, disable, index}) => {
 
     useEffect(()=>{
         getTrabajosanterioresPorEmpleado();
-    },[empleadoSeleccionado?.iDempleado, refetch]) */
+    },[empleadoSeleccionado?.iDempleado, refetch]) 
 
     
 
@@ -100,10 +89,9 @@ const TrabajosAnteriores = ({responses, setResponses, disable, index}) => {
             return;
     }
     
-    async function sendData(e,valueSended){
+    async function sendData(e){
         e.preventDefault();
         
-        if(valueSended){
             try{
                 //LOADING
                 await axios.post(urlTrabajosAnterioresPost)
@@ -111,8 +99,8 @@ const TrabajosAnteriores = ({responses, setResponses, disable, index}) => {
                     if(res.status === 200){
                         //loading false
                         dispatch(addTrabajoAnterior(res.data)) //crear la accion para agregar un nuevo trabajo.
-                        setRefetch(!refetch)
-                        swal({
+                        dispatch(setRefetch(!refetch))
+                        return swal({
                             title: "Trabajo anterior Agregado",
                             text: "Trabajo anterior agregado con éxito",
                             icon: "success",
@@ -121,25 +109,22 @@ const TrabajosAnteriores = ({responses, setResponses, disable, index}) => {
                 })
             }catch(err){
                 //error true
-                swal({
+                return swal({
                     title: "Error",
                     text: err.toString(),
                     icon: "error",
                 })
             }
-        }else{
-           return dispatch(addTrabajoAnterior({...formTrabajosAnteriores, idEmpleado : empleadoSeleccionado?.iDempleado}));            
-        }
         
     }
     const deleteTRabajoAnterior=(id)=>{
         dispatch(deleteTaEmpleado(id));
         dispatch(saveIdsTa(id));
     }
-    console.log({...formTrabajosAnteriores, idEmpleado : empleadoSeleccionado?.iDempleado})
+
     
   return (
-    index === 5 && <section className={index === 5 ? "transitionClassUp" : "transitionClassneDone"}>  
+    index === 4 && <section className={index === 4 ? "transitionClassUp" : "transitionClassneDone"}>  
     <fieldset className="border p-2">
                 <legend className="float-none w-auto p-2 contenedorFieldSet">
                     <i className="fs-5 bi-hammer "></i><span className="ms-1 d-none d-sm-inline colorFont">Trabajos Anteriores</span>

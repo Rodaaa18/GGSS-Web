@@ -7,10 +7,13 @@ const TableBasic1 = ({columns, value,documentaciones, setRefetch, setDocumentaci
   const dispatch = useDispatch();
   
   function getDocumentacion(documentaciones,id){
-    let document = documentaciones && documentaciones.filter((item)=>{
-      return item.idDocumentacion === id
-    })
-    return document[0]
+    if(documentaciones){
+      let document = documentaciones && documentaciones.filter((item)=>{
+        return item.idDocumentacion === id
+      })
+      return document[0]
+    }
+    
   }
  
   return (

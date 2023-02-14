@@ -1,0 +1,7 @@
+export const GET_DATOS_EXTRAS  ="GET_DATOS_EXTRAS"
+export const DATOS_EXTRAS_EMPLEADO = "DATOS_EXTRAS_EMPLEADO"
+export const SAVE_ID_DE = "SAVE_ID_DE"
+export const CLEAN_ID_DE = "CLEAN_ID_DE"
+export const DELETE_DE_EMP = "DELETE_DE_EMP"
+export const ADD_DATOSE_EMP = "ADD_DATOSE_EMP"
+export const GET_DE_SELECTED = "GET_DE_SELECTED"

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import swal from 'sweetalert';
 import { inputButtonClasessDocumentacion } from '../../classes/classes';
 import { deleteDocuEmpleado, getDocumentacionEmpleado, getDocumentaciones, saveIds } from '../../redux/actions/documentacionesActions';
+import { setRefetch } from '../../redux/actions/fetchActions';
 import ButtonCancelarAceptar from '../Buttons/ButtonCancelarAceptar';
 import CheckLabel from '../Inputs/CheckLabel/CheckLabel';
 import InputButtonLiquidacion from '../Inputs/InputButton/InputButtonLiquidacion';
@@ -20,8 +21,8 @@ const Documentacion = ({disable, index, responses, setResponses}) => {
     const empleadoSeleccionado = useSelector((state)=> state.employeState.employe);
     const documentacion = useSelector((state)=> state.documentacionState.documentaciones);
     const documentacionDelEmpleado = useSelector((state)=> state.documentacionState.documentacionDelEmpleado);
+    const refetch = useSelector((state)=> state.fetchState.refetch);
     const [ documentacionSeleccionada, setDocumentacionSeleccionada ] = useState({});
-    const [ refetch, setRefetch ] = useState(false);
     const columns = ["Seleccionar" ,"Fecha", "Vencimiento", "Documento", "Liq", "Observaciones", "Incluir Cuota"]
     const handleFetch = async (url, action, comun) => {   
         if(comun){
@@ -74,7 +75,7 @@ const Documentacion = ({disable, index, responses, setResponses}) => {
                 .post("http://54.243.192.82/api/EmpleadosDocumentacion", {...formDocumentacion, idEmpleado : empleadoSeleccionado?.iDempleado})
                 .then((res)=>{
                     if(res.status === 200){
-                        setRefetch(!refetch)
+                        dispatch(setRefetch(!refetch));
                         console.log(res)
                         return swal({
                             title : "Ok",
@@ -105,8 +106,8 @@ const Documentacion = ({disable, index, responses, setResponses}) => {
     }
     
   return (
-    index === 7 && 
-    <section className={index === 7 ? "transitionClassUp" : "transitionClassneDone"}>
+    index === 5 && 
+    <section className={index === 5 ? "transitionClassUp" : "transitionClassneDone"}>
     <div className='container'>  
     <fieldset className="border p-2">
             <legend className="float-none w-auto p-2 contenedorFieldSet">

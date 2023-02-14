@@ -1,4 +1,5 @@
 import { useDispatch } from "react-redux";
+import { domicilioSelected } from "../../redux/actions/domicilioActions";
 
 const TablaDomicilios = ({ columns , value }) => {
   
@@ -26,8 +27,8 @@ const TablaDomicilios = ({ columns , value }) => {
                 return(
                   <tr>
                     <th>
-                      <input type="radio" name="seleccionar" id="seleccionar" value={item.idDomicilio} 
-                      //onClick={(e)=> dispatch(selectedIdDomicilio(e.target.value))} 
+                      <input type="radio" name="seleccionar" id="seleccionar" value={item} 
+                      onClick={()=> dispatch(domicilioSelected(item))} 
                       />
                     </th>
                     <th>
@@ -41,7 +42,6 @@ const TablaDomicilios = ({ columns , value }) => {
                   </tr>                  
                 )
               })
-             
             }     
           </tbody>
         </table>        

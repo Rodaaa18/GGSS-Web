@@ -1,4 +1,5 @@
 import { useDispatch } from "react-redux";
+import { licenciaSelected } from "../../redux/actions/licenciasActions";
 
 import "./TableBootstrap.css";
 
@@ -30,7 +31,7 @@ const TableLicencias = ({
         <tbody>
           {licenciaDelEmpleado &&
             licenciaDelEmpleado.map((valor, i) => {
-              console.log(valor);
+          
               return (
                 <tr key={i}>
                   <th scope="row">
@@ -40,7 +41,10 @@ const TableLicencias = ({
                       type="radio"
                       name="seleccionar"
                       id="seleccionar"
-                  
+                      onClick={() => {
+                        setChecked(true);                 
+                        dispatch(licenciaSelected(valor))
+                      }}
                         
                     />{" "}
                   </th>

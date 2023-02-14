@@ -3,19 +3,22 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import swal from 'sweetalert';
 import { getEmpleados } from '../../redux/actions/emplyeActions';
+import { setRefetch } from '../../redux/actions/fetchActions';
 import Browser from '../Browser/Browser';
 import ButtonCallModal from '../ButtonCallModal/ButtonCallModal';
 import Personales from '../DatosPersonales/Personales';
 import Documentacion from '../Documentacion/Documentacion';
 import EmployeData from '../EmployeData/EmployeData';
+import Extras from '../Extras/Extras';
 import Familias from '../Familia/Familias';
+import Licencias from '../Licencias/Licencias';
 import Liquidacion from '../Liquidacion/Liquidacion';
 import ChildModal from '../Modals/ChildModal';
 import { objectEstadosCiviles, objectEstudios, objectTipoDocumento, propsModal, propsModalEstudios, propsModalTiposDocumento } from '../Modals/props';
 import TrabajosAnteriores from '../TrabajosAnteriores/TrabajosAnteriores';
 import "./NuevaVista.css"
 
-const NuevaVista = () => {
+const NuevaVista = ({combosForm , setCombosForm}) => {
     const [ modalValues, setModalValues ] = useState({});
     const [ nameModal, setNameModal ] = useState({});
     const [ index, setIndex ] = useState(0);
@@ -25,16 +28,15 @@ const NuevaVista = () => {
     const [ transition, setTransition ] = useState(false);
     const [ valueItemModal , setValueItemModal ] = useState({});
     const [ modify, setModify ] = useState(false);
-    const [ refetch, setRefetch ] = useState(false);
     const [ disableModal, setDisableMOdal ] = useState(true);
-    
+    const [ImageSelectedPrevious, setImageSelectedPrevious] = useState(null);
 
     const dispatch = useDispatch();
     const empleadoSeleccionado = useSelector((state)=> state.employeState.employe);
     const estadosCiviles = useSelector((state)=> state.fetchState.estadosCiviles);
     const estudios = useSelector((state)=> state.fetchState.estudios);
     const tiposDocumento = useSelector((state)=> state.fetchState.tiposDocumento);
-
+    const refetch = useSelector((state)=> state.fetchState.refetch);
     //#region -------------------------------------------------------------------------------------URLs Informes
     const urlReporteAsignacionesFamiliares = `http://54.243.192.82/api/ReporteAsignacionesFamiliares/${empleadoSeleccionado.iDempleado},%201`;
     const urlReporteResumenLegajo = `http://54.243.192.82/api/ResumenDeLegajo/Get?IDempleado=${empleadoSeleccionado.iDempleado}&idParametro=1`
@@ -75,7 +77,7 @@ const NuevaVista = () => {
       if(responses?.formBrowser?.nombreApellido){
         await axios({method: 'get',
                       url: urlEmpleadoPorApellido,
-                      timeout: 1000}).then((res) => {
+                      timeout: 4000}).then((res) => {
           dispatch(getEmpleados(res.data.result));    
         });
         return;
@@ -83,20 +85,20 @@ const NuevaVista = () => {
       else if(responses?.formBrowser?.legajo){
         await axios({method: 'get',
                     url: urlEmpleadoPorLegajo,
-                    timeout: 1000}).then((res) => {
+                    timeout: 4000}).then((res) => {
           dispatch(getEmpleados(res.data.result));    
         });
         return;
       }else if(responses?.formBrowser?.nombreApellido   && responses?.formBrowser?.legajo){
         await axios({method: 'get',
                     url: urlEmpleadoApYLegajo,
-                    timeout: 1000}).then((res) => {
+                    timeout: 4000}).then((res) => {
             dispatch(getEmpleados(res.data.result));    
         });
         return;
       }else{
         await axios.get(urlBasica).then((res) => {
-
+            console.log(res)
           dispatch(getEmpleados(res.data.result));
     
         });
@@ -275,15 +277,23 @@ const NuevaVista = () => {
                 </a>
             </li>
             <li>
-                <a href="#submenu1" data-bs-toggle="collapse" className="nav-link text-truncate colorFont" onClick={()=> setIndex(4)}>
-                    <i className="fs-5 bi-journal-arrow-up"></i><span className="ms-1 d-none d-sm-inline">Licencias</span> </a>
+                <a data-bs-toggle="collapse" className="nav-link text-truncate colorFont" onClick={()=> setIndex(4)}>
+                    <i className="fs-5 bi-journal-arrow-up"></i><span className="ms-1 d-none d-sm-inline">Trabajos Anteriores</span> </a>
             </li>
             <li>
                 <a className="nav-link text-truncate colorFont" onClick={()=> setIndex(5)}>
-                    <i className="fs-5 bi-hammer"></i><span className="ms-1 d-none d-sm-inline">Trabajos Anteriores</span></a>
+                    <i className="fs-5 bi-hammer"></i><span className="ms-1 d-none d-sm-inline">Documentación</span></a>
+            </li>            
+            <li>
+                <a  className="nav-link text-truncate colorFont" onClick={()=> setIndex(6)}>
+                    <i className="fs-5 bi-folder2-open"></i><span className="ms-1 d-none d-sm-inline">Licencias</span></a>
+            </li>
+            <li>
+                <a href="#" className="nav-link text-truncate colorFont" onClick={()=> setIndex(7)}>
+                    <i className="fs-5 bi-explicit-fill"></i><span className="ms-1 d-none d-sm-inline">Extras</span> </a>
             </li>
             <li className="dropdown">
-                <a href="/" className="nav-link dropdown-toggle  text-truncate colorFont" id="dropdown" data-bs-toggle="dropdown" aria-expanded={false}>
+                <a href="#" className="nav-link dropdown-toggle  text-truncate colorFont" id="dropdown" data-bs-toggle="dropdown" aria-expanded={false}>
                     <i className="fs-5 bi-graph-up"></i><span className="ms-1 d-none d-sm-inline">Informes</span>
                 </a>
                 <ul className="dropdown-menu text-small shadow" aria-labelledby="dropdown">
@@ -293,16 +303,8 @@ const NuevaVista = () => {
                     <li><a target="_blank" onClick={()=>onClickInfo(empleadoSeleccionado)} className="dropdown-item colorFont d-flex flex-row justify-content-start align-items-center flex-wrap btnInformes" rel="noreferrer" href={empleadoSeleccionado ? urlFichaEmpleado : null}>Ficha Empleado</a></li>
                 </ul>
             </li>
-            <li>
-                <a href="#" className="nav-link text-truncate colorFont" onClick={()=> setIndex(7)}>
-                    <i className="fs-5 bi-folder2-open"></i><span className="ms-1 d-none d-sm-inline">Documentacion</span></a>
-            </li>
-            <li>
-                <a href="/" className="nav-link text-truncate colorFont" onClick={()=> setIndex(8)}>
-                    <i className="fs-5 bi-explicit-fill"></i><span className="ms-1 d-none d-sm-inline">Extras</span> </a>
-            </li>
             <li className="dropdown">
-                <a href="/" className="nav-link dropdown-toggle  text-truncate colorFont" id="dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <a href="#" className="nav-link dropdown-toggle  text-truncate colorFont" id="dropdown" data-bs-toggle="dropdown" aria-expanded="false">
                     <i className="fs-5 bi-graph-up"></i><span className="ms-1 d-none d-sm-inline">Tabla de Datos</span>
                 </a>
                 <ul className="dropdown-menu text-small shadow" aria-labelledby="dropdown">
@@ -413,7 +415,7 @@ const NuevaVista = () => {
                         {
                             index === 1 && 
                             <div className='col-xl-12 col-lg-12 col-md-12'>
-                                <Personales refetch={refetch} setResponses={setResponses} responses={responses} disable={disable} onOff={onOff} index={index}/>
+                                <Personales combosForm={combosForm} setCombosForm={setCombosForm} setResponses={setResponses} responses={responses} disable={disable} onOff={onOff} index={index} ImageSelectedPrevious={ImageSelectedPrevious} setImageSelectedPrevious={setImageSelectedPrevious} />
                             </div>
                         }
                         {
@@ -425,120 +427,47 @@ const NuevaVista = () => {
                         {
                             index === 3 && 
                             <div className='col-xl-12 col-lg-12 col-md-12'>
-                                <Liquidacion index={index} setResponses={setResponses} responses={responses}/>
+                                <Liquidacion combosForm={combosForm} setCombosForm={setCombosForm} index={index} setResponses={setResponses} responses={responses}/>
                             </div>
                         }
                         {
-                            index === 7 && 
+                            index === 4 && 
                             <div className='col-xl-12 col-lg-12 col-md-12'>
-                                <Documentacion index={index} setResponses={setResponses} responses={responses}/>
+                                <TrabajosAnteriores index={index} setResponses={setResponses} responses={responses}/>
                             </div>
                         }
                         {
                             index === 5 && 
                             <div className='col-xl-12 col-lg-12 col-md-12'>
-                                <TrabajosAnteriores index={index} setResponses={setResponses} responses={responses}/>
+                                <Documentacion index={index} setResponses={setResponses} responses={responses}/>
                             </div>
                         }
+                        {
+                            index === 6 && 
+                            <div className='col-xl-12 col-lg-12 col-md-12'>
+                                <Licencias index={index} setResponses={setResponses} responses={responses}/>
+                            </div>
+                        }
+                        {
+                            index === 7 && 
+                            <div className='col-xl-12 col-lg-12 col-md-12'>
+                                <Extras index={index} setResponses={setResponses} responses={responses}/>
+                            </div>
+                        }
+                    </div>
+                    <div className='col-xl-12 d-flex flex-row-reverse align-items-center'>
+                        <button className='btn btn-success m-1'>
+                            <span>Aceptar</span>
+                        </button>
+                        <button className='btn btn-danger m-1'>
+                            <span>Cancelar</span>
+                        </button>
                     </div>
                 </div>
                 </div> 
         </div>
     </div>
 </div></>
-
-
-
-
-
-
-   /*  <div class="container-fluid">
-    <div class="row flex-nowrap">
-        <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
-            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
-                <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-                    <span class="fs-5 d-none d-sm-inline">Menu</span>
-                </a>
-                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
-                    <li class="nav-item">
-                        <a href="#" class="nav-link align-middle px-0">
-                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Home</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
-                            <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">Dashboard</span> </a>
-                        <ul class="collapse show nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
-                            <li class="w-100">
-                                <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Item</span> 1 </a>
-                            </li>
-                            <li>
-                                <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Item</span> 2 </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#" class="nav-link px-0 align-middle">
-                            <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline">Orders</span></a>
-                    </li>
-                    <li>
-                        <a href="#submenu2" data-bs-toggle="collapse" class="nav-link px-0 align-middle ">
-                            <i class="fs-4 bi-bootstrap"></i> <span class="ms-1 d-none d-sm-inline">Bootstrap</span></a>
-                        <ul class="collapse nav flex-column ms-1" id="submenu2" data-bs-parent="#menu">
-                            <li class="w-100">
-                                <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Item</span> 1</a>
-                            </li>
-                            <li>
-                                <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Item</span> 2</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#submenu3" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
-                            <i class="fs-4 bi-grid"></i> <span class="ms-1 d-none d-sm-inline">Products</span> </a>
-                            <ul class="collapse nav flex-column ms-1" id="submenu3" data-bs-parent="#menu">
-                            <li class="w-100">
-                                <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Product</span> 1</a>
-                            </li>
-                            <li>
-                                <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Product</span> 2</a>
-                            </li>
-                            <li>
-                                <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Product</span> 3</a>
-                            </li>
-                            <li>
-                                <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Product</span> 4</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#" class="nav-link px-0 align-middle">
-                            <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline">Customers</span> </a>
-                    </li>
-                </ul>
-                <hr/>
-                <div class="dropdown pb-4">
-                    <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="https://github.com/mdo.png" alt="hugenerd" width="30" height="30" class="rounded-circle"/>
-                        <span class="d-none d-sm-inline mx-1">loser</span>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-                        <li><a class="dropdown-item" href="#">New project...</a></li>
-                        <li><a class="dropdown-item" href="#">Settings</a></li>
-                        <li><a class="dropdown-item" href="#">Profile</a></li>
-                        <li>
-                            <hr class="dropdown-divider"/>
-                        </li>
-                        <li><a class="dropdown-item" href="#">Sign out</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="col py-3">
-            Content area...
-        </div>
-    </div>
-</div> */
 
   )
 }

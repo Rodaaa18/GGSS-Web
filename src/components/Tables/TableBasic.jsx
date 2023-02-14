@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { familiarSelected } from "../../redux/actions/familiaActions";
 
 const TableBasic = ({
   columns,
@@ -8,7 +10,7 @@ const TableBasic = ({
 }) => {
   const [inputCheck, setInputCheck] = useState({});
   const [familiares, setFamiliares ] = useState([]);
-  
+  const dispatch = useDispatch();
   
   useEffect(() => {
     setInputCheck({});
@@ -49,7 +51,7 @@ const TableBasic = ({
                           name="imputRadio"
                           value={item.idFamiliares}
                           id={`selected${i}`}
-                          //onClick={(e) => dispatch(addNewFamiliar(item.idFamiliares))}
+                          onClick={(e) => dispatch(familiarSelected(item))}
                         />
                       </th>
                       <td

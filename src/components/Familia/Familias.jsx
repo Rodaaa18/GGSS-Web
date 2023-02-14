@@ -10,17 +10,23 @@ import { AXIOS_ERROR, SET_LOADING } from '../../redux/types/employeTypes';
 import axios from 'axios';
 import { useState } from 'react';
 import InputRadio from '../Inputs/InputRadio/InputRadio';
+import swal from 'sweetalert';
+import { setRefetch } from '../../redux/actions/fetchActions';
+import { deleteFamiliar, getFamiliaresEmpleado, saveIdsFam } from '../../redux/actions/familiaActions';
 
 const Familias = ({index, responses, setResponses}) => {
     const [ formFamilias, setFormFamilias ] = useState(responses["formFamilias"]);
     const [ parentescos, setParentescos ] = useState([]);
-    const [ familiaresEmpleado, setFamiliaresEmpleado ] = useState([]);
     const dispatch = useDispatch();
     const empleadoSeleccionado = useSelector((state)=> state.employeState.employe);
     const tiposDocumento = useSelector((state)=> state.fetchState.tiposDocumento);
     const nacionalidades = useSelector((state)=> state.fetchState.paises);
     const estudios = useSelector((state)=> state.fetchState.estudios);
-
+    const familiarSeleccionado = useSelector((state)=> state.familiaState.familiarSeleccionado);
+    const refetch = useSelector((state)=> state.fetchState.refetch);
+    const familiares = useSelector((state)=> state.familiaState.familiares);
+    const familiaresEmpleado = useSelector((state)=>  state.familiaState.familiaresEmpleado);
+    const idsFam = useSelector((state)=>  state.familiaState.idsFam);
 
     const handleFetch = async (url, action) => {        
         
@@ -44,9 +50,9 @@ const Familias = ({index, responses, setResponses}) => {
         axios.get(
             `http://54.243.192.82/api/MostrarDatosFamiliarPorEmpleado/${empleadoSeleccionado?.iDempleado}`
         ).then((res)=>{
-            setFamiliaresEmpleado(res.data)
+            dispatch(getFamiliaresEmpleado(res.data));
         })
-      },[empleadoSeleccionado?.iDempleado])
+      },[empleadoSeleccionado?.iDempleado,refetch])
 
       
 
@@ -79,6 +85,38 @@ const Familias = ({index, responses, setResponses}) => {
         "Incluir Cuota",
         "Obs"
       ];
+
+      async function sendDataFamiliar(e,url, body){
+        e.preventDefault();
+        try{
+            await axios
+            .post(url, body)
+            .then((res)=>{
+                if(res.status === 200){
+                    dispatch(setRefetch(!refetch));
+                    return swal({
+                        title : "Ok",
+                        text : "Familiar agregado con éxito",
+                        icon : "success"
+                    })
+                }
+            })
+        }catch(err){
+            return swal({
+                title : "Error",
+                text : "Error al agregar el Familiar",
+                icon : "error"
+            })
+        }
+    }
+    function deleteFamiliarSelect (e, id){       
+        e.preventDefault();
+        dispatch(deleteFamiliar(Number(id)))
+        dispatch(saveIdsFam(Number(id)));   
+      }
+    
+     
+
   return (
     index === 2 && <section className={index === 2 ? "transitionClassUp" : "transitionClassneDone"} >
     <div className='container'>
@@ -91,9 +129,9 @@ const Familias = ({index, responses, setResponses}) => {
                         <div className='row'>
                             <div className='col-xl-6 col-lg-12 col-md-12'>
                                 <InputForm 
-                                value={formFamilias?.nombreApellido}
+                                value={formFamilias?.apellidoyNombres}
                                 clasess={classesFormDP}
-                                idInput="nombreApellido"
+                                idInput="apellidoyNombres"
                                 messageError="Solo puede contener números."
                                 placeHolder="Apellido y Nombres"
                                 nameLabel="Apellido y Nombres"
@@ -172,45 +210,45 @@ const Familias = ({index, responses, setResponses}) => {
                                     clasess={inputButtonClasessParentesco}
                                     array={nacionalidades}
                                     onChange={onChangeValues}
-                                    idSelected={formFamilias?.iDPaisOrigen}
+                                    idSelected={formFamilias?.iDpaisOrigen}
                                     nameButton="..."
                                     nameLabel="Pais O"
                                     placeholder="Pais O"
                                     propArrayOp="nombrePais"
                                     propIdOption="idPais"
-                                    idInput="iDPaisOrigen"
+                                    idInput="iDpaisOrigen"
                                 />
                                 <InputButtonLiquidacion
                                     clasess={inputButtonClasessParentesco}
                                     array={nacionalidades}
                                     onChange={onChangeValues}
-                                    idSelected={formFamilias?.idPais}
+                                    idSelected={formFamilias?.iDnacionalidad}
                                     nameButton="..."
                                     nameLabel="Nacionalidad"
                                     placeholder="Nacionalidad"
                                     propArrayOp="nacionalidad_fem"
                                     propIdOption="idPais"
-                                    idInput="idPais"
+                                    idInput="iDnacionalidad"
                                 />
                                 <div className='d-flex flex-row justify-content-start align-items-center w-100 m-0 p-0 '>
                                     <label htmlFor="" className='labelInputDate'> Fecha Baja</label>
-                                    <input type="date" onChange={(e)=>onChangeValues(e.target.value, "fechaBaja")} name="fechaBaja" id="fechaBaja" className='dateTimeClass' value={formFamilias?.fechaBaja}/>
+                                    <input type="date" onChange={(e)=>onChangeValues(e.target.value, "fBaja")} name="fBaja" id="fBaja" className='dateTimeClass' value={formFamilias?.fBaja}/>
                                     <div className='w-50'></div>
                                 </div>
                                 <TextArea
                                     clasess={inputButtonClasessTextArea}
                                     onChange={onChangeValues}
                                     nameLabel="Observ."
-                                    idInput="obsFamilia"
+                                    idInput="obs"
                                     maxLength="255" 
-                                    value={ formFamilias?.obsFamilia} 
+                                    value={ formFamilias?.obs} 
                                 />
                             </div>
                         </div>
                         <div className='row'>
                             <div className='col-12 d-flex flex-row justify-content-end align-items-center mt-2'>
-                                <button className='btn btn-success' style={{width : "10%"}}>+</button>
-                                <button className='btn btn-danger' style={{width : "10%"}}>-</button>
+                                <button className='btn btn-success' onClick={(e)=>sendDataFamiliar(e, "http://54.243.192.82/api/InsertarNuevoFamiliar", {...formFamilias, idEmpleado : empleadoSeleccionado?.iDempleado, idFamiliares : ((familiares && familiares[familiares.length -1]  && (familiares[familiares.length -1].iDfamiliares))+1)})} style={{width : "10%"}}>+</button>
+                                <button className='btn btn-danger' onClick={(e)=>deleteFamiliarSelect(e, familiarSeleccionado?.idFamiliares)} style={{width : "10%"}}>-</button>
                             </div>
                             <div className='col-12 mt-1'>
                                 <TableBasic 

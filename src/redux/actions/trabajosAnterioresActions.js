@@ -1,4 +1,4 @@
-import { ADD_TRABAJO_ANTERIOR, CLEAN_IDS_TA, DELETE_TA_EMPLEADO, GET_TRABAJOS_ANTERIORES, SAVE_IDS_TA, TRABAJO_ANTERIOR_POR_EMPLEADO } from "../types/trabajosAnterioresTypes"
+import { ADD_TA, ADD_TRABAJO_ANTERIOR, CLEAN_IDS_TA, DELETE_TA_EMPLEADO, GET_TRABAJOS_ANTERIORES, SAVE_IDS_TA, TRABAJO_ANTERIOR_POR_EMPLEADO } from "../types/trabajosAnterioresTypes"
 
 export const getTrabajosAnterioresPorEmpleados=(payload)=>{
     return{

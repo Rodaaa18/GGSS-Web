@@ -13,13 +13,12 @@ import InputRadio from '../Inputs/InputRadio/InputRadio';
 import TextArea from '../Inputs/TextArea/TextArea';
 import Liquidacion from '../Liquidacion/Liquidacion';
 import "../Home/NuevaVista.css";
-import { urls } from './urls';
 
-const Personales = ({ index, disable, responses, setResponses, refetch }) => {
+
+const Personales = ({ index, disable, responses, setResponses, refetch, ImageSelectedPrevious, setImageSelectedPrevious, combosForm , setCombosForm }) => {
     const [ formDatosPersonales, setFormDatosPersonales ] = useState(responses["formDatosPersonales"]);
 
     
-    const dispatch = useDispatch();
     const empleadoSeleccionado = useSelector((state)=> state.employeState.employe);
     
     const tiposDocumento = useSelector((state)=> state.fetchState.tiposDocumento);
@@ -29,38 +28,9 @@ const Personales = ({ index, disable, responses, setResponses, refetch }) => {
     const estadosCiviles = useSelector((state)=> state.fetchState.estadosCiviles);
 
 
-    const handleFetch = async (url, action, state) => {
-        
-        if(state){
-            await axios
-          .get(url)
-          .then((res) => {
-            action(res.data.result);
-            return
-          })
-          .catch((err) => {
-            
-          });
-          return;
-        }else{
-            await axios
-            .get(url)
-            .then((res) => {
-              dispatch(action(res.data.result));
-            })
-            .catch((err) => {
-              
-            });
-        }       
-    };
+    
 
-    useEffect(()=>{
-        handleFetch(urls.urlTiposDocumentos, getTiposDni);
-        handleFetch(urls.urlEstadosCiviles, getEstadosCiviles);  
-        handleFetch(urls.urlPaisesNac, getPaises);
-        handleFetch(urls.urlEstados, getEstados);  
-        handleFetch(urls.urlEstudios, getEstudios);  
-    },[refetch])
+    
 
     function onChangeValues(e, key){
         const newResponse = {...formDatosPersonales};
@@ -323,10 +293,15 @@ const Personales = ({ index, disable, responses, setResponses, refetch }) => {
                                           disabled={disable}/>
                                   </div>
                                   <div className='col-xl-4 col-lg-4 col-md-12 d-flex flex-column justify-content-start align-items-center'>
-                                      <InputFile
+                                        <InputFile
+                                          ImageSelectedPrevious={ImageSelectedPrevious}
+                                          setImageSelectedPrevious={setImageSelectedPrevious}
                                           inputName="Arrastre su imagen"
-                                          idInput="inputImage" 
-                                          disabled={disable}/>
+                                          idInput="imagen" 
+                                          disabled={disable}
+                                          imagen={empleadoSeleccionado?.imagen}
+                                          onChange={onChangeValues}
+                                        />
                                   </div>
                               </div>
                           </div>
@@ -337,7 +312,7 @@ const Personales = ({ index, disable, responses, setResponses, refetch }) => {
                       </div>
                       
                   {/* </fieldset> */}
-                  <Domicilio disable={disable} responses={responses} setResponses={setResponses}/>
+                  <Domicilio combosForm={combosForm} setCombosForm={setCombosForm} disable={disable} responses={responses} setResponses={setResponses}/>
                   </div>
                     </div>
                     {/* <div className='col-xl-6 col-lg-12 col-md-12'>

@@ -15,13 +15,14 @@ import Liquidacion from '../Liquidacion/Liquidacion';
 import "../Home/NuevaVista.css";
 import { bodyBasicEmpleados, mockData } from '../Home/urls';
 import swal from 'sweetalert';
+import generateCuil from './funcGenerarCuil';
 
 
 const Personales = ({ index, disable, responses, setResponses, refetch, ImageSelectedPrevious, setImageSelectedPrevious, combosForm , setCombosForm }) => {
 
     const initialState = Object.assign({...bodyBasicEmpleados}, responses["formDatosPersonales"]);
     const [ formDatosPersonales, setFormDatosPersonales ] = useState(initialState);
-
+    const [valor, setValor] = useState();
     
     const empleadoSeleccionado = useSelector((state)=> state.employeState.employe);
     
@@ -70,7 +71,16 @@ const Personales = ({ index, disable, responses, setResponses, refetch, ImageSel
           formDatosPersonales
         });    
     },[formDatosPersonales]);
-
+    useEffect(()=>{
+        setFormDatosPersonales({...formDatosPersonales,cuil : valor })
+      },[valor])
+  
+    
+      let value =disable ? formDatosPersonales?.cuil  : empleadoSeleccionado?.cuil;
+      useEffect(()=>{
+          
+          setValor(value);
+      },[value])
   return (
     
     index === 1 && <section className={index === 1 ? "transitionClassUp" : "transitionClassneDone"} >
@@ -174,10 +184,10 @@ const Personales = ({ index, disable, responses, setResponses, refetch, ImageSel
                                           name="cuil" 
                                           id="cuil" 
                                           className='dateTimeClass'
-                                          value={ disable ?  empleadoSeleccionado?.cuil : formDatosPersonales?.cuil} 
+                                          value={ value ?  value : valor} 
                                           />
                                           <div className='d-flex flex-row justify-content-start align-items-center mt-2 btnGenerar w-50'>
-                                              <button disabled={disable} className='btn btn-danger btn-sm'>Generar</button>
+                                              <button disabled={disable} className='btn btn-danger btn-sm' onClick={(e)=>{e.preventDefault();setValor(generateCuil(formDatosPersonales?.nroDocumento,formDatosPersonales?.sexo, swal)); }}>Generar</button>
                                           </div>
                                       </div>
                                       <InputForm
@@ -332,7 +342,6 @@ const Personales = ({ index, disable, responses, setResponses, refetch, ImageSel
                           </div>
 
                       </form>
-                      <button className='btn btn-danger' onClick={()=> sendPersonales()}>send data</button>
                       </div>
                       </div>
                       </div>

@@ -1,4 +1,4 @@
-import { ADD_ONE_EMPLOYE, AXIOS_ERROR, AXIOS_SUCCESS, GET_EMPLEADOS } from "../types/employeTypes"
+import { ADD_ONE_EMPLOYE, AXIOS_ERROR, AXIOS_SUCCESS, CLEAN_EMPLOYE, GET_EMPLEADOS, TOTAL_EMPLOYES } from "../types/employeTypes"
 
 export const axiosSuccess = (payload) =>{
     return {
@@ -23,4 +23,16 @@ export const addOneEmploye = (payload) =>{
         type : ADD_ONE_EMPLOYE,
         payload,
     };
+}
+export const cleanEmploye=(payload)=>{
+    return{
+        type: CLEAN_EMPLOYE,
+        payload
+    }
+}
+export const totalEmployes=(payload)=>{
+    return{
+        type: TOTAL_EMPLOYES,
+        payload
+    }
 }

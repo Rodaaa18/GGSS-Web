@@ -1,4 +1,4 @@
-import { ADD_DOMICILIO, DELETE_DOMICILIO, DOMICILIO_SELECTED, GET_DOMICILIOS, SAVE_ID_DOM } from "../types/domicilioTypes";
+import { ADD_DOMICILIO, CLEAR_ID_DOM, DELETE_DOMICILIO, DOMICILIO_SELECTED, GET_DOMICILIOS, SAVE_ID_DOM } from "../types/domicilioTypes";
 
 const initialState = {
     domiciliosEmpleado : "",
@@ -40,6 +40,12 @@ export const domicilioReducer = ( state = initialState, action)=>{
             return {
                 ...state,
                 idsDom : [...state.idsDom.push(payload)]
+            }
+        }
+        case CLEAR_ID_DOM : {
+            return{
+                ...state,
+                idsDom : state.idsDom = []
             }
         }
         default : return state

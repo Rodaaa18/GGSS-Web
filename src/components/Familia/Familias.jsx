@@ -141,7 +141,7 @@ const Familias = ({index, responses, setResponses}) => {
                                 />
                                 <div className='d-flex flex-row justify-content-start align-items-center w-100 m-0 p-0'>
                                     <label htmlFor="" className='labelInput'>DNI</label>
-                                    <select name="iDtipoDocumento" onChange={(e)=>onChangeValues(e.target.value, "iDtipoDocumento")} className='formulario-input-InpButton-TipoDNI' id="iDtipoDocumento">
+                                    <select name="iDtipoDocumentos" onChange={(e)=>onChangeValues(e.target.value, "iDtipoDocumentos")} className='formulario-input-InpButton-TipoDNI' id="iDtipoDocumentos">
                                         <option value="">Seleccionar</option>
                                         {
                                             tiposDocumento && tiposDocumento.map((item,i)=>{

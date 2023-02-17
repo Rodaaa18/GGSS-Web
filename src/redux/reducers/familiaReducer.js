@@ -1,4 +1,4 @@
-import { DELETE_FAMILIAR, FAMILIAR_SELECTED, GET_FAMILIARES, GET_FAMILIARES_EMPLEADOS, SAVE_IDS_FAM } from "../types/familiaTypes";
+import { CLEAN_ID_FAM, DELETE_FAMILIAR, FAMILIAR_SELECTED, GET_FAMILIARES, GET_FAMILIARES_EMPLEADOS, SAVE_IDS_FAM } from "../types/familiaTypes";
 
 const initialState = {
     familiares : "",
@@ -40,6 +40,12 @@ export const familiaReducer=( state = initialState, action)=> {
             return{
                 ...state,
                 familiaresEmpleado : payload
+            }
+        }
+        case CLEAN_ID_FAM : {
+            return{
+                ...state,
+                idsFAm : state.idsFAm = []
             }
         }
         default : return state

@@ -4,3 +4,4 @@ export const DOMICILIO_SELECTED = "DOMICILIO_SELECTED";
 export const DELETE_DOMICILIO = "DELETE_DOMICILIO"
 
 export const SAVE_ID_DOM = "SAVE_ID_DOM"
+export const CLEAR_ID_DOM = "CLEAR_ID_DOM"

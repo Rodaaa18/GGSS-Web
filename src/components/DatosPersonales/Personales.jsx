@@ -13,10 +13,14 @@ import InputRadio from '../Inputs/InputRadio/InputRadio';
 import TextArea from '../Inputs/TextArea/TextArea';
 import Liquidacion from '../Liquidacion/Liquidacion';
 import "../Home/NuevaVista.css";
+import { bodyBasicEmpleados, mockData } from '../Home/urls';
+import swal from 'sweetalert';
 
 
 const Personales = ({ index, disable, responses, setResponses, refetch, ImageSelectedPrevious, setImageSelectedPrevious, combosForm , setCombosForm }) => {
-    const [ formDatosPersonales, setFormDatosPersonales ] = useState(responses["formDatosPersonales"]);
+
+    const initialState = Object.assign({...bodyBasicEmpleados}, responses["formDatosPersonales"]);
+    const [ formDatosPersonales, setFormDatosPersonales ] = useState(initialState);
 
     
     const empleadoSeleccionado = useSelector((state)=> state.employeState.employe);
@@ -28,7 +32,28 @@ const Personales = ({ index, disable, responses, setResponses, refetch, ImageSel
     const estadosCiviles = useSelector((state)=> state.fetchState.estadosCiviles);
 
 
-    
+    async function sendPersonales(){
+        try{
+            await axios
+            .post("http://54.243.192.82/api/Empleados/Guardar", mockData, {
+                headers: {
+                  'Access-Control-Allow-Origin' : '*',
+                  'Access-Control-Allow-Methods':'GET,PUT,POST,DELETE,PATCH,OPTIONS'
+                }})
+            .then((res)=>{
+                console.log(res)
+                if(res.status===200){
+                    return swal({
+                        title : "Ok",
+                        text : "Empleado Agregado",
+                        icon : "success"
+                    })
+                }
+            })
+        }catch(err){
+            console.log(err)
+        }
+    }
 
     
 
@@ -121,14 +146,14 @@ const Personales = ({ index, disable, responses, setResponses, refetch, ImageSel
                                         />
                                       <div className='d-flex flex-row justify-content-start align-items-center w-100 m-0 p-0'>
                                           <label htmlFor="" className='labelInput'>DNI</label>
-                                          <select name="" disabled={disable} onChange={(e)=> onChangeValues(e.target.value, "iDtipoDocumento")} className='formulario-input-InpButton-TipoDNI' id="iDtipoDocumento">
-                                              <option value="">Seleccionar</option>
-                                              {
-                                                tiposDocumento && tiposDocumento.map((item,i)=>{
-                                                    return(Number(empleadoSeleccionado?.iDtipoDocumento) === Number(item.iDtipoDocumento) ? <option selected key={i} value={disable ? item.iDtipoDocumento : formDatosPersonales?.iDtipoDocumento}>{item.tipoDocumento}</option> : <option key={i} value={disable ? item.iDtipoDocumento : formDatosPersonales?.iDtipoDocumento}>{item.tipoDocumento}</option>)
-                                                })
-                                              }
-                                          </select>
+                                          <select name="iDtipoDocumento" onChange={(e)=>onChangeValues(Number(e.target.value), "iDtipoDocumento")} className='formulario-input-InpButton-TipoDNI' id="iDtipoDocumento">
+                                        <option value="">Seleccionar</option>
+                                        {
+                                            tiposDocumento && tiposDocumento.map((item,i)=>{
+                                                return(<option value={Number(item.iDtipoDocumento)}>{item.tipoDocumento}</option>)
+                                            })
+                                        }
+                                    </select>
                                           <input 
                                           type="text" 
                                           className='formulario-input-Legajo-TipoDNI '
@@ -176,7 +201,7 @@ const Personales = ({ index, disable, responses, setResponses, refetch, ImageSel
                                           placeholder="Estado Civil"
                                           propArrayOp="masculino"
                                           propIdOption="idEstadoCivil"
-                                          idInput="IdEstadoCivil" 
+                                          idInput="iDestadoCivil" 
                                           disabled={disable}
                                           onChange={onChangeValues}
                                           />
@@ -189,7 +214,7 @@ const Personales = ({ index, disable, responses, setResponses, refetch, ImageSel
                                           placeholder="Nacionalidad"
                                           propArrayOp="nacionalidad_masc"
                                           propIdOption="idPais"
-                                          idInput="iDNacionalidad" 
+                                          idInput="idNacionalidad" 
                                           disabled={disable}
                                           onChange={onChangeValues}
                                           />
@@ -204,7 +229,7 @@ const Personales = ({ index, disable, responses, setResponses, refetch, ImageSel
                                           placeholder="Estado"
                                           propArrayOp="nombreEstado"
                                           propIdOption="idEstado"
-                                          idInput="IdEstado" 
+                                          idInput="idEstado" 
                                           disabled={disable}
                                           onChange={onChangeValues}
                                           />
@@ -269,7 +294,7 @@ const Personales = ({ index, disable, responses, setResponses, refetch, ImageSel
                                           placeholder="Pais Origen"
                                           propArrayOp="nombrePais"
                                           propIdOption="idPais"
-                                          idInput="iDPaisOrigen" 
+                                          idInput="idPaisOrigen" 
                                           disabled={disable}/>
                                       <InputButtonLiquidacion
                                           clasess={inputButtonClasessParentesco}
@@ -281,14 +306,14 @@ const Personales = ({ index, disable, responses, setResponses, refetch, ImageSel
                                           placeholder="Estudios"
                                           propArrayOp="estudiosNivel"
                                           propIdOption="iDestudios"
-                                          idInput="iDestudios" 
+                                          idInput="iDEstudios" 
                                           disabled={disable}/>
                                       <TextArea
                                         onChange={onChangeValues}
                                           clasess={inputButtonClasessTextArea}
                                           value={ disable ?  empleadoSeleccionado?.obsEstudios : formDatosPersonales?.observacionesEstudios}  
                                           nameLabel="Observ."
-                                          idInput="observacionesEstudios"
+                                          idInput="obsEstudios"
                                           maxLength="255" 
                                           disabled={disable}/>
                                   </div>
@@ -307,6 +332,7 @@ const Personales = ({ index, disable, responses, setResponses, refetch, ImageSel
                           </div>
 
                       </form>
+                      <button className='btn btn-danger' onClick={()=> sendPersonales()}>send data</button>
                       </div>
                       </div>
                       </div>

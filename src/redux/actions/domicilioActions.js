@@ -1,4 +1,4 @@
-import { ADD_DOMICILIO, DELETE_DOMICILIO, DOMICILIO_SELECTED, GET_DOMICILIOS, SAVE_ID_DOM } from "../types/domicilioTypes"
+import { ADD_DOMICILIO, CLEAR_ID_DOM, DELETE_DOMICILIO, DOMICILIO_SELECTED, GET_DOMICILIOS, SAVE_ID_DOM } from "../types/domicilioTypes"
 
 export const getDomicilios=(payload)=>{
     return{
@@ -27,6 +27,12 @@ export const deleteDomicilio=(payload)=>{
 export const saveIdDom=(payload)=>{
     return{
         type : SAVE_ID_DOM,
+        payload
+    }
+}
+export const cleanIdsDom=(payload)=>{
+    return{
+        type : CLEAR_ID_DOM,
         payload
     }
 }

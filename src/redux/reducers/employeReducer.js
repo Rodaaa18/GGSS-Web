@@ -1,8 +1,9 @@
-import { ADD_ONE_EMPLOYE, AXIOS_ERROR, AXIOS_SUCCESS, GET_EMPLEADOS, SET_LOADING } from "../types/employeTypes";
+import { ADD_ONE_EMPLOYE, AXIOS_ERROR, AXIOS_SUCCESS, CLEAN_EMPLOYE, GET_EMPLEADOS, SET_LOADING, TOTAL_EMPLOYES } from "../types/employeTypes";
 
 const initialState = {
     employes : "",
-    employe : ""
+    employe : "",
+    totalEmployes : ""
 }
 export const employeReducer=( state = initialState, action)=>{
     const { type , payload } = action;
@@ -37,6 +38,18 @@ export const employeReducer=( state = initialState, action)=>{
             return {
                 ...state,
                 employe : payload,
+            }
+        }
+        case CLEAN_EMPLOYE : {
+            return{
+                ...state,
+                employe : state.employe = {}
+            }
+        }
+        case TOTAL_EMPLOYES : {
+            return{
+                ...state,
+                totalEmployes : payload
             }
         }
         default:

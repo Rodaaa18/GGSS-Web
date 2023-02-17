@@ -2,8 +2,10 @@ import axios from 'axios';
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import swal from 'sweetalert';
-import { getEmpleados } from '../../redux/actions/emplyeActions';
+import { getEmpleados, totalEmployes } from '../../redux/actions/emplyeActions';
 import { setRefetch } from '../../redux/actions/fetchActions';
+import { cleanIdsTa } from '../../redux/actions/trabajosAnterioresActions';
+import { cleanIdsDoc } from '../../redux/actions/documentacionesActions'
 import Browser from '../Browser/Browser';
 import ButtonCallModal from '../ButtonCallModal/ButtonCallModal';
 import Personales from '../DatosPersonales/Personales';
@@ -17,6 +19,11 @@ import ChildModal from '../Modals/ChildModal';
 import { objectEstadosCiviles, objectEstudios, objectTipoDocumento, propsModal, propsModalEstudios, propsModalTiposDocumento } from '../Modals/props';
 import TrabajosAnteriores from '../TrabajosAnteriores/TrabajosAnteriores';
 import "./NuevaVista.css"
+import { clearIdsLic } from '../../redux/actions/licenciasActions';
+import { cleanIdsDom } from '../../redux/actions/domicilioActions';
+import { cleanIdFam } from '../../redux/actions/familiaActions';
+import { cleanIdDe } from '../../redux/actions/datosExtrasActions';
+import { mockData } from './urls';
 
 const NuevaVista = ({combosForm , setCombosForm}) => {
     const [ modalValues, setModalValues ] = useState({});
@@ -33,6 +40,7 @@ const NuevaVista = ({combosForm , setCombosForm}) => {
 
     const dispatch = useDispatch();
     const empleadoSeleccionado = useSelector((state)=> state.employeState.employe);
+    const empleadosTotales = useSelector((state)=> state.employeState.totalEmployes);
     const estadosCiviles = useSelector((state)=> state.fetchState.estadosCiviles);
     const estudios = useSelector((state)=> state.fetchState.estudios);
     const tiposDocumento = useSelector((state)=> state.fetchState.tiposDocumento);
@@ -57,10 +65,11 @@ const NuevaVista = ({combosForm , setCombosForm}) => {
     }
     //#endregion
     //#region -------------------------------------------------------------------------------------URLs Empleados
+    
     const urlBasica = `http://54.243.192.82/api/Empleados?page=2000&ordered=true`;
-    const urlEmpleadoPorApellido = `http://54.243.192.82/api/Empleados?records=10000&filter=${responses?.formBrowser?.nombreApellido ? responses?.formBrowser?.nombreApellido  : null}&ordered=true`;
-    const urlEmpleadoPorLegajo = `http://54.243.192.82/api/Empleados?records=10000&legajo=${responses?.formBrowser?.legajo ? responses?.formBrowser?.legajo : null}&ordered=true`;
-    const urlEmpleadoApYLegajo = `http://54.243.192.82/api/Empleados?records=10000&filter=${responses?.formBrowser?.nombreApellido  ? responses?.formBrowser?.nombreApellido  : null}&legajo=${responses?.formBrowser?.legajo ? responses?.formBrowser?.legajo : null}&ordered=true`;
+    const urlEmpleadoPorApellido = `http://54.243.192.82/api/Empleados?records=0&page=1&filter=${responses?.formBrowser?.nombreApellido ? responses?.formBrowser?.nombreApellido  : null}&ordered=true`;
+    const urlEmpleadoPorLegajo = `http://54.243.192.82/api/Empleados?records=0&page=1&legajo=${responses?.formBrowser?.legajo ? responses?.formBrowser?.legajo : null}&ordered=true`;
+    const urlEmpleadoApYLegajo = `http://54.243.192.82/api/Empleados?records=0&page=1&filter=${responses?.formBrowser?.nombreApellido  ? responses?.formBrowser?.nombreApellido  : null}&legajo=${responses?.formBrowser?.legajo ? responses?.formBrowser?.legajo : null}&ordered=true`;
     const urlApeLegOrdered = `http://54.243.192.82/api/Empleados?records=10000&filter=${responses?.formBrowser?.nombreApellido  ? responses?.formBrowser?.nombreApellido  : null}&legajo=${responses?.formBrowser?.legajo? responses?.formBrowser?.legajo : null}&ordered=true`;
     //#endregion
 
@@ -77,33 +86,36 @@ const NuevaVista = ({combosForm , setCombosForm}) => {
       if(responses?.formBrowser?.nombreApellido){
         await axios({method: 'get',
                       url: urlEmpleadoPorApellido,
-                      timeout: 4000}).then((res) => {
-          dispatch(getEmpleados(res.data.result));    
+                      timeout: 2000
+                      }).then((res) => {
+                        console.log(res)
+          dispatch(getEmpleados(res.data));    
         });
         return;
       }
       else if(responses?.formBrowser?.legajo){
         await axios({method: 'get',
                     url: urlEmpleadoPorLegajo,
-                    timeout: 4000}).then((res) => {
-          dispatch(getEmpleados(res.data.result));    
+                    timeout: 2000}).then((res) => {
+          dispatch(getEmpleados(res.data));    
         });
         return;
       }else if(responses?.formBrowser?.nombreApellido   && responses?.formBrowser?.legajo){
         await axios({method: 'get',
                     url: urlEmpleadoApYLegajo,
-                    timeout: 4000}).then((res) => {
-            dispatch(getEmpleados(res.data.result));    
+                    timeout: 2000}).then((res) => {
+            dispatch(getEmpleados(res.data));    
         });
         return;
       }else{
         await axios.get(urlBasica).then((res) => {
-            console.log(res)
-          dispatch(getEmpleados(res.data.result));
+            
+          dispatch(getEmpleados(res.data));
     
         });
       }      
     }
+   
     const handleClickClose=(nameModalProp)=>{
         let newState = {...nameModal}
     
@@ -114,7 +126,7 @@ const NuevaVista = ({combosForm , setCombosForm}) => {
 
     useEffect(()=>{
         getEmpleadosData();
-    },[responses?.formBrowser?.nombreApellido , responses?.formBrowser?.legajo])
+    },[responses?.formBrowser?.nombreApellido , responses?.formBrowser?.legajo, refetch])
 
     //#region -------------------------------------------------------------------------------------Modal Functions
     async function sendModalData(url, body,bodyUpdate, id){
@@ -251,7 +263,334 @@ const NuevaVista = ({combosForm , setCombosForm}) => {
     }
     
     //#endregion
-  
+    function cleanIdsGeneral(){
+        setImageSelectedPrevious(null);
+        Array.from(document.querySelectorAll("input[type=text]")).forEach(
+          (input) => (input.value = "")
+        );
+    
+        let formData = { ...responses.formDatosPersonales };
+    
+        const inputsArray = Object.entries(formData);
+    
+        const formDatosPersonale = inputsArray.map(([key]) => [key, ""]);
+    
+        const formDatosPersonales = Object.fromEntries(formDatosPersonale);
+        setResponses({
+          ...responses,
+          formDatosPersonales})
+          
+        setDisable(true);
+        dispatch(cleanIdsTa())
+        dispatch(cleanIdsDoc())
+        dispatch(clearIdsLic())
+        dispatch(cleanIdsDom())
+        dispatch(cleanIdFam())
+        dispatch(cleanIdDe())
+        dispatch(setRefetch(!refetch))
+        setModify(false)
+      }
+      async function deleteEmploye(id){
+        try{
+          await axios.delete(`http://54.243.192.82/api/Empleados/${id}`)
+          .then((res)=>{
+            if(res.isSuccess == true || res.status === 200){
+              return swal({
+                title: "Ok",
+                text: "Empleado Eliminado con éxito",
+                icon: "success",
+              });
+              ;
+            }else{
+              return swal({
+                title: "Error",
+                text: "Error al eliminar el Empleado, debe eliminar sus relaciones",
+                icon: "error",
+              });
+            }
+            
+          })
+        }catch(err){
+          return swal({
+            title: "Error",
+            text: "Error al eliminar el Empleado, debe eliminar sus relaciones",
+            icon: "error",
+          });
+        }
+      }
+      function validateFields(body, requiredFields) {
+        const missingFields = requiredFields.filter((field) => !body[field]);
+      
+        if (missingFields.length > 0) {
+          const missingFieldsLabels = missingFields.join(", ");
+          return `Debe completar los siguientes campos: ${missingFieldsLabels}`;
+        }
+      
+        return null;
+      }
+     const idsTrabajosAnterioresDelete = useSelector((state)=> state.trabajosAnterioresState.ids);
+    const documentacionDelte = useSelector((state)=> state.documentacionState.ids);
+    const licenciasDelete = useSelector((state)=> state.licenciasState.idsLic);
+    const idDomiciliosArray = useSelector((state)=> state.domiciliosState.idsDom);
+    const arraysFamiliares = useSelector((state)=> state.familiaState.idsFam);
+    const arrayIdsDatoExtra = useSelector((state)=> state.datosExtrasState.idsDe);
+
+    const urlTRabajoDelete = "http://54.243.192.82/api/TrabajosAnteriores?IdTrabajoAnterior=";
+    const urlDocDelte = "http://54.243.192.82/api/EmpleadosDocumentacion/"
+    const urlLicDelete = "http://54.243.192.82/api/"
+    const urlEmpleadoGuarda = "http://54.243.192.82/api/Empleados/Guardar"
+    const urlDOmicilioElimina = `http://54.243.192.82/api/sp_DomiciliosElimina/1?IdEmpleador=0`
+    const urlDeleteFAmiliar = "http://54.243.192.82/api/EliminarFamiliarPorId/"
+    const urlDatoExtraElimina = "http://54.243.192.82/api/EliminarDatosExtras/"
+      const objectRequest = {
+        urls : {
+          urlTRabajoDelete : urlTRabajoDelete,
+          urlDocDelte : urlDocDelte,
+          urlLicDelete : urlLicDelete,
+          urlEmpleadoGuarda : urlEmpleadoGuarda,
+          urlDOmicilioElimina : urlDOmicilioElimina,
+          urlDeleteFAmiliar : urlDeleteFAmiliar,
+          urlDatoExtraElimina : urlDatoExtraElimina
+        },
+        arrays : [
+          idsTrabajosAnterioresDelete,
+          documentacionDelte,
+          licenciasDelete,
+          idDomiciliosArray,
+          arraysFamiliares,
+          arrayIdsDatoExtra
+        ]
+      }//iDestadoCivil
+      console.log(empleadoSeleccionado?.iDempleado)
+      const requiredFields = [
+        "legajo",
+        "apellido",
+        "nombres",
+        "iDtipoDocumento",
+        "nroDocumento",
+        "cuil",
+        "telFijo",
+        "iDestadoCivil",
+        "idNacionalidad",
+        "idEstado",
+        "sexo",
+        "mail",
+        "obsEstudios",
+        "telMovil",
+        "iDEstudios",
+        "idPaisOrigen"
+      ];
+      async function deleteItems(objectRequest){
+        debugger;
+        const { urls, arrays } = objectRequest;
+      
+        try{
+         
+        if(index === 1 ){
+          if(empleadoSeleccionado?.iDempleado === 0 || empleadoSeleccionado?.iDempleado === undefined){
+            const error = validateFields(responses?.formDatosPersonales, requiredFields);
+            if (error) {
+                return swal({
+                  title: "Error",
+                  text: error,
+                  icon: "error",
+                });
+            return;
+          }else{
+            const error = validateFields(responses?.formDatosPersonales, requiredFields);
+            if (error) {
+                return swal({
+                  title: "Error",
+                  text: error,
+                  icon: "error",
+                });
+            return;
+          }
+          }
+        }
+              //#endregion
+          
+            console.log(mockData)
+            
+              if(!empleadoSeleccionado?.iDempleado){
+                console.log( {...responses?.formDatosPersonales, iDempleado : 0})
+                 await axios.post( urls.urlEmpleadoGuarda ,{...responses?.formDatosPersonales, iDempleado : 0}, {
+                  headers: {
+                    'Access-Control-Allow-Origin' : '*',
+                    'Access-Control-Allow-Methods':'GET,PUT,POST,DELETE,PATCH,OPTIONS'
+                  }})
+                 .then((res)=>{
+                  dispatch(setRefetch(!refetch));
+                  //setSaveEmpleado(!saveEmpleado)
+                 if(res.status===200){
+                    return swal({
+                        title: "Ok",
+                        text: "Empleado Guardado con éxito",
+                        icon: "success",
+                    })
+                 }
+                   return
+      
+                 })
+              }else{
+                console.log({...responses?.formDatosPersonales, iDempleado : empleadoSeleccionado?.iDempleado})
+                await axios.put(urls.urlEmpleadoGuarda, {...responses?.formDatosPersonales, iDempleado : empleadoSeleccionado?.iDempleado})
+                .then((res)=>{
+              
+                    dispatch(setRefetch(!refetch));
+                  //setSaveEmpleado(!saveEmpleado)
+                   return swal({
+                    title: "Ok",
+                    text: "Empleado Modificado con éxito",
+                    icon: "success",
+                })
+                })
+                arrays[3].map(async (id)=>{
+                   
+                  let array = {
+                    "arrayList": [
+                      id
+                    ]
+                  }
+                 
+                  await axios.delete(`${urls.urlDOmicilioElimina}`, {data : array, headers : {'Content-Type': 'application/json;'}})
+                  .then((res) => {console.log(res);dispatch(setRefetch(!refetch))})
+               });
+              }
+        }else{
+          switch(urls){
+            case urls.urlTRabajoDelete : {
+                arrays.idsTrabajosAnterioresDelete.map(async (id)=>{
+                  await axios.delete(`${urls.urlTRabajoDelete}${id}`)
+                  .then((res) => console.log())
+                })
+            }
+            break
+            case urls.urlDocDelte : {
+              arrays.documentacionDelte.map(async (id)=>{
+                await axios.delete(`${urls.urlDocDelte}${id}`)
+                .then((res) =>  
+                            swal({
+                            title: "Ok",
+                            text: "Documentacion eliminada con éxito",
+                            icon: "success",
+                            })
+                    )
+              })
+            }
+            break;
+            case urls.urlLicDelete : {
+               arrays.licenciasDelete.map(async (id)=>{
+                 await axios.delete(`${urls.urlLicDelete}${id}`)
+                 .then((res) => console.log())
+              })}
+              break;
+            case urls.urlDOmicilioElimina : {
+              arrays.idDomiciliosArray.map(async (id)=>{
+                await axios.delete(`${urls.urlDOmicilioElimina}`)
+                .then((res) => console.log())
+              })}
+              break;
+              case urls.urlDeleteFAmiliar : {
+                arrays.arraysFamiliares.map(async (id)=>{
+                  await axios.delete(`${urls.urlDeleteFAmiliar}${id}`)
+                  .then((res) => console.log())
+                })}
+              break;
+                case urls.urlDatoExtraElimina : {
+                  arrays.arrayIdsDatoExtra.map(async (id)=>{
+                    await axios.delete(`${urls.urlDatoExtraElimina}${id}`)
+                    .then((res) => console.log())
+                  })
+          }
+          break
+            default : {
+                arrays[0].map(async (id)=>{
+                  let array = {
+                    "arrayList": [
+                      id
+                    ]
+                  }
+                  await axios.delete(`${urls.urlTRabajoDelete}${id}`, {data : array, headers : {'Content-Type': 'application/json;'}})
+                  .then((res) => swal({
+                    title: "Ok",
+                    text: "Trabajo Anterior eliminado con éxito",
+                    icon: "success",
+                }))
+              });
+              arrays[1].map(async (id)=>{
+                await axios.delete(`${urls.urlDocDelte}${id}`)
+                .then((res) => { if(res.status === 200){swal({
+                  title: "Ok",
+                  text: "Documentacion eliminada con éxito",
+                  icon: "success",
+              })}})
+              });
+              arrays[2].map(async (id)=>{
+                let array = {
+                  "arrayList": [
+                    id
+                  ]
+                }
+               
+                try{
+                  await axios.delete(`${urls.urlLicDelete}0`, {data : array, headers : {'Content-Type': 'application/json;'}})
+                .then((res) => {
+                      
+                      if(res.status === 200){
+                      return swal({
+                        title: "Ok",
+                        text: "Licencia eliminada con éxito",
+                        icon: "success",
+                    })
+                    }                
+                  }  
+                )
+                }catch(err){
+                    dispatch(setRefetch(!refetch));
+                  return swal({
+                    title: "Error",
+                    text: "No se puede elimiar una Licencia que tiene asignado un Detalle",
+                    icon: "error",
+                })
+                }
+                
+             });
+                arrays[4].map(async (id)=>{    
+                  await axios.delete(`${urls.urlDeleteFAmiliar}${id}`)
+                  .then((res) => {
+                    if(res.status === 200){
+                    swal({
+                      title: "Ok",
+                      text: "Familiar eliminado con éxito",
+                      icon: "success",
+                  })
+                  }} )
+              });
+                arrays[5].map(async (id)=>{    
+                  await axios.delete(`${urls.urlDatoExtraElimina}${id}`)
+                  .then((res) => {if(res.status === 200){
+                    swal({
+                      title: "Ok",
+                      text: "Dato Extra eliminado con éxito",
+                      icon: "success",
+                  })
+                  }} )
+              });
+            }
+          }
+        }
+           
+        }catch(err){
+            //codigo de error
+            swal({
+                title: "Error",
+                text: "Error al guardar/actualizar el empleado",
+                icon: "error",
+            })
+        }
+    }
+    
     console.log(responses)
     return (
     <><div className="offcanvas offcanvas-start offcanvasNav" tabIndex="-1" id="offcanvas" data-bs-keyboard="false" data-bs-backdrop="false">
@@ -408,7 +747,7 @@ const NuevaVista = ({combosForm , setCombosForm}) => {
             <div className='container-flex' >
                 <div className='row'>                    
                     <div className='col-xl-3 col-lg-12 col-md-12'>
-                        <Browser setResponses={setResponses} responses={responses} setDisable={setDisable}/>
+                        <Browser deleteEmploye={deleteEmploye} setResponses={setResponses} responses={responses} setDisable={setDisable}/>
                     </div>
                     <div className='col-xl-9 col-lg-12 col-md-12'>
                         <EmployeData />
@@ -456,10 +795,10 @@ const NuevaVista = ({combosForm , setCombosForm}) => {
                         }
                     </div>
                     <div className='col-xl-12 d-flex flex-row-reverse align-items-center'>
-                        <button className='btn btn-success m-1'>
+                        <button className='btn btn-success m-1' onClick={()=> deleteItems(objectRequest)}>
                             <span>Aceptar</span>
                         </button>
-                        <button className='btn btn-danger m-1'>
+                        <button className='btn btn-danger m-1' onClick={cleanIdsGeneral}>
                             <span>Cancelar</span>
                         </button>
                     </div>

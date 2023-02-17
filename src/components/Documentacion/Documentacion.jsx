@@ -22,6 +22,11 @@ const Documentacion = ({disable, index, responses, setResponses}) => {
     const documentacion = useSelector((state)=> state.documentacionState.documentaciones);
     const documentacionDelEmpleado = useSelector((state)=> state.documentacionState.documentacionDelEmpleado);
     const refetch = useSelector((state)=> state.fetchState.refetch);
+
+    const idsDom = useSelector((state)=> state.documentacionState.ids)
+    
+    console.log(idsDom)
+
     const [ documentacionSeleccionada, setDocumentacionSeleccionada ] = useState({});
     const columns = ["Seleccionar" ,"Fecha", "Vencimiento", "Documento", "Liq", "Observaciones", "Incluir Cuota"]
     const handleFetch = async (url, action, comun) => {   

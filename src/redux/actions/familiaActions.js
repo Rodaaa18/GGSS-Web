@@ -1,4 +1,4 @@
-import { DELETE_FAMILIAR, FAMILIAR_SELECTED, GET_FAMILIARES, GET_FAMILIARES_EMPLEADOS, SAVE_IDS_FAM } from "../types/familiaTypes"
+import { CLEAN_ID_FAM, DELETE_FAMILIAR, FAMILIAR_SELECTED, GET_FAMILIARES, GET_FAMILIARES_EMPLEADOS, SAVE_IDS_FAM } from "../types/familiaTypes"
 
 export const familiarSelected=(payload)=>{
     return{
@@ -27,6 +27,12 @@ export const saveIdsFam=(payload)=>{
 export const getFamiliaresEmpleado=(payload)=>{
     return{
         type : GET_FAMILIARES_EMPLEADOS,
+        payload
+    }
+}
+export const cleanIdFam=(payload)=>{
+    return{
+        type : CLEAN_ID_FAM,
         payload
     }
 }

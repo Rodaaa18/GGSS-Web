@@ -1,4 +1,4 @@
-import { ADD_DETALLE_LIC, ADD_NEW_LICENCIA, DELETE_LICENCIA, DETALLE_SELECTED, GET_LIC_EMPLEADO, LICENCIA_SELECTED, OPTION_SELECTED, SAVE_IDS_LIC, UPDATE_LICENCIA } from "../types/licenciasTypes";
+import { ADD_DETALLE_LIC, ADD_NEW_LICENCIA, CLEAR_IDS_LIC, DELETE_LICENCIA, DETALLE_SELECTED, GET_LIC_EMPLEADO, LICENCIA_SELECTED, OPTION_SELECTED, SAVE_IDS_LIC, UPDATE_LICENCIA } from "../types/licenciasTypes";
 
 const initialState = {
     options : "",
@@ -66,6 +66,12 @@ export const licenciasReducer=(state = initialState, action)=>{
             return {
                 ...state,
                 licenciasEmpleado : [...state.licenciasEmpleado, payload]
+            }
+        }
+        case CLEAR_IDS_LIC : {
+            return {
+                ...state,
+                idsLic : state.idsLic = []
             }
         }
         default : return state

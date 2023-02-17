@@ -24,7 +24,7 @@ function InputFile({ disabled, imagen,onChange, idInput,action, ImageSelectedPre
         ctx.drawImage(image, 0, 0);
         const pngImageDataURL = canvas.toDataURL('image/png');
         // Usar pngImageDataURL aquí
-        onChange(pngImageDataURL, idInput)
+        onChange(pngImageDataURL.substring(22), idInput)
         setImageSelectedPrevious(pngImageDataURL);
         
       };

@@ -4,12 +4,12 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import swal from 'sweetalert';
-import { addOneEmploye, getEmpleados } from '../../redux/actions/emplyeActions';
+import { addOneEmploye, cleanEmploye, getEmpleados } from '../../redux/actions/emplyeActions';
 import { getEmployeById } from '../../services/fetchAPI';
 import "./Browser.css";
 
 
-const Browser = ({responses, setResponses, setDisable}) => {
+const Browser = ({responses, setResponses, setDisable, deleteEmploye}) => {
     const [ formBrowser, setFormBrowser ] = useState(responses["formBrowser"]);
 
     const dispatch = useDispatch();
@@ -40,6 +40,7 @@ const Browser = ({responses, setResponses, setDisable}) => {
         });
       }
       function habilitaEdit() {
+        dispatch(cleanEmploye())
         Array.from(document.querySelectorAll("input")).forEach(
           (input) => (input.value = "")
         );
@@ -157,7 +158,7 @@ const Browser = ({responses, setResponses, setDisable}) => {
             </button>
             <button
               className={`btn btn-danger btn-sm d-flex justify-content-center m-1  align-items- newClass`}
-              //onClick={(e) => habilitaUpdate(e)}
+              onClick={()=> deleteEmploye(empleadoSeleccionado?.iDempleado)}
             >
               Eliminar
             </button>

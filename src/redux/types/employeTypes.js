@@ -3,3 +3,5 @@ export const SET_LOADING = "SET_LOADING";
 export const AXIOS_SUCCESS = "AXIOS_SUCCESS";
 export const AXIOS_ERROR = "AXIOS_ERROR";
 export const ADD_ONE_EMPLOYE = "ADD_ONE_EMPLOYE";
+export const CLEAN_EMPLOYE = "CLEAN_EMPLOYE"
+export const TOTAL_EMPLOYES = "TOTAL_EMPLOYES"

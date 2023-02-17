@@ -42,7 +42,8 @@ const TableLicencias = ({
                       name="seleccionar"
                       id="seleccionar"
                       onClick={() => {
-                        setChecked(true);                 
+                        setChecked(true);  
+                        dispatch(setRefectch(!refetch));               
                         dispatch(licenciaSelected(valor))
                       }}
                         

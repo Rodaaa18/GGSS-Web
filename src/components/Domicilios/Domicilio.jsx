@@ -35,11 +35,7 @@ const Domicilio = ({disable, responses, setResponses, combosForm , setCombosForm
                   dispatch(getDomicilios(res.data));
                 })
             }catch(err){
-                swal({
-                    title : "Error",
-                    text : "Error al obtener los domicilios",
-                    icon : "error"
-                })
+                
             }
         }        
     }

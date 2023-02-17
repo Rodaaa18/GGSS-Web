@@ -1,4 +1,4 @@
-import { ADD_DETALLE_LIC, ADD_NEW_LICENCIA, DELETE_LICENCIA, DETALLE_SELECTED, GET_LIC_EMPLEADO, LICENCIA_SELECTED, OPTION_SELECTED, SAVE_IDS_LIC, UPDATE_LICENCIA } from "../types/licenciasTypes"
+import { ADD_DETALLE_LIC, ADD_NEW_LICENCIA, CLEAR_IDS_LIC, DELETE_LICENCIA, DETALLE_SELECTED, GET_LIC_EMPLEADO, LICENCIA_SELECTED, OPTION_SELECTED, SAVE_IDS_LIC, UPDATE_LICENCIA } from "../types/licenciasTypes"
 
 export const optionSelected=(payload)=>{
     return{
@@ -51,6 +51,12 @@ export const updateLicencia=(payload)=>{
 export const addNewLicencia=(payload)=>{
     return {
         type :  ADD_NEW_LICENCIA,
+        payload
+    }
+}
+export const clearIdsLic=(payload)=>{
+    return{
+        type : CLEAR_IDS_LIC,
         payload
     }
 }

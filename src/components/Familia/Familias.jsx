@@ -50,7 +50,7 @@ const Familias = ({index, responses, setResponses}) => {
         axios.get(
             `http://54.243.192.82/api/MostrarDatosFamiliarPorEmpleado/${empleadoSeleccionado?.iDempleado}`
         ).then((res)=>{
-            dispatch(getFamiliaresEmpleado(res.data));
+            dispatch(getFamiliaresEmpleado(res.data.result));
         })
       },[empleadoSeleccionado?.iDempleado,refetch])
 

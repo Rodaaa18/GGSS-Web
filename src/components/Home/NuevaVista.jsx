@@ -25,7 +25,7 @@ import { cleanIdFam } from '../../redux/actions/familiaActions';
 import { cleanIdDe } from '../../redux/actions/datosExtrasActions';
 import { mockData } from './urls';
 
-const NuevaVista = ({combosForm , setCombosForm}) => {
+const NuevaVista = ({combosForm , setCombosForm, renderButtons}) => {
     const [ modalValues, setModalValues ] = useState({});
     const [ nameModal, setNameModal ] = useState({});
     const [ index, setIndex ] = useState(0);
@@ -66,11 +66,8 @@ const NuevaVista = ({combosForm , setCombosForm}) => {
     //#endregion
     //#region -------------------------------------------------------------------------------------URLs Empleados
     
-    const urlBasica = `http://54.243.192.82/api/Empleados?page=2000&ordered=true`;
-    const urlEmpleadoPorApellido = `http://54.243.192.82/api/Empleados?records=0&page=1&filter=${responses?.formBrowser?.nombreApellido ? responses?.formBrowser?.nombreApellido  : null}&ordered=true`;
-    const urlEmpleadoPorLegajo = `http://54.243.192.82/api/Empleados?records=0&page=1&legajo=${responses?.formBrowser?.legajo ? responses?.formBrowser?.legajo : null}&ordered=true`;
-    const urlEmpleadoApYLegajo = `http://54.243.192.82/api/Empleados?records=0&page=1&filter=${responses?.formBrowser?.nombreApellido  ? responses?.formBrowser?.nombreApellido  : null}&legajo=${responses?.formBrowser?.legajo ? responses?.formBrowser?.legajo : null}&ordered=true`;
-    const urlApeLegOrdered = `http://54.243.192.82/api/Empleados?records=10000&filter=${responses?.formBrowser?.nombreApellido  ? responses?.formBrowser?.nombreApellido  : null}&legajo=${responses?.formBrowser?.legajo? responses?.formBrowser?.legajo : null}&ordered=true`;
+    const urlEmpleadoPorApellido = `http://54.243.192.82/api/Empleados?filter=${responses?.formBrowser?.nombreApellido  ? responses?.formBrowser?.nombreApellido : null}&modo=${renderButtons}`;
+    const urlEmpleadoPorLegajo = `http://54.243.192.82/api/Empleados?legajo=${responses?.formBrowser?.legajo ? responses?.formBrowser?.legajo : null}&modo=${renderButtons}`;
     //#endregion
 
     function onChangeValues(e, key){
@@ -83,13 +80,12 @@ const NuevaVista = ({combosForm , setCombosForm}) => {
     }
 
     async function getEmpleadosData(){
-      if(responses?.formBrowser?.nombreApellido){
+      if(responses?.formBrowser?.nombreApellido ){
         await axios({method: 'get',
                       url: urlEmpleadoPorApellido,
-                      timeout: 2000
-                      }).then((res) => {
-                        console.log(res)
-          dispatch(getEmpleados(res.data));    
+                      timeout: 2000}).then((res) => {
+                      
+          dispatch(getEmpleados(res.data.result));
         });
         return;
       }
@@ -97,23 +93,14 @@ const NuevaVista = ({combosForm , setCombosForm}) => {
         await axios({method: 'get',
                     url: urlEmpleadoPorLegajo,
                     timeout: 2000}).then((res) => {
-          dispatch(getEmpleados(res.data));    
+          dispatch(getEmpleados(res.data.result));
         });
-        return;
-      }else if(responses?.formBrowser?.nombreApellido   && responses?.formBrowser?.legajo){
-        await axios({method: 'get',
-                    url: urlEmpleadoApYLegajo,
-                    timeout: 2000}).then((res) => {
-            dispatch(getEmpleados(res.data));    
-        });
-        return;
+        return;      
       }else{
-        await axios.get(urlBasica).then((res) => {
-            
-          dispatch(getEmpleados(res.data));
-    
-        });
-      }      
+       
+          dispatch(getEmpleados(null));
+      
+      }
     }
    
     const handleClickClose=(nameModalProp)=>{
@@ -125,8 +112,8 @@ const NuevaVista = ({combosForm , setCombosForm}) => {
     }
 
     useEffect(()=>{
-        getEmpleadosData();
-    },[responses?.formBrowser?.nombreApellido , responses?.formBrowser?.legajo, refetch])
+      getEmpleadosData();
+    },[responses?.formBrowser?.nombreApellido , responses?.formBrowser?.legajo, refetch, renderButtons])
 
     //#region -------------------------------------------------------------------------------------Modal Functions
     async function sendModalData(url, body,bodyUpdate, id){
@@ -361,7 +348,7 @@ const NuevaVista = ({combosForm , setCombosForm}) => {
           arrayIdsDatoExtra
         ]
       }//iDestadoCivil
-      console.log(empleadoSeleccionado?.iDempleado)
+      
       const requiredFields = [
         "legajo",
         "apellido",
@@ -410,7 +397,7 @@ const NuevaVista = ({combosForm , setCombosForm}) => {
         }
               //#endregion
           
-            console.log(mockData)
+           
             
               if(!empleadoSeleccionado?.iDempleado){
                 console.log( {...responses?.formDatosPersonales, iDempleado : 0})
@@ -433,7 +420,6 @@ const NuevaVista = ({combosForm , setCombosForm}) => {
       
                  })
               }else{
-                console.log({...responses?.formDatosPersonales, iDempleado : empleadoSeleccionado?.iDempleado})
                 await axios.put(urls.urlEmpleadoGuarda, {...responses?.formDatosPersonales, iDempleado : empleadoSeleccionado?.iDempleado})
                 .then((res)=>{
               
@@ -465,7 +451,6 @@ const NuevaVista = ({combosForm , setCombosForm}) => {
                   .then((res) => console.log())
                 })
             }
-            break
             case urls.urlDocDelte : {
               arrays.documentacionDelte.map(async (id)=>{
                 await axios.delete(`${urls.urlDocDelte}${id}`)

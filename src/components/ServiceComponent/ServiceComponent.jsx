@@ -11,6 +11,7 @@ import { urls } from './urls';
 
 const ServiceComponent = () => {    
     const [ combosForm , setCombosForm ] = useState({});
+    const [ renderButtons, setRenderButtons ] = useState(0);
     const newState = {...combosForm};
     const dispatch = useDispatch();
     const refetch = useSelector((state)=> state.fetchState.refetch);
@@ -64,7 +65,7 @@ const ServiceComponent = () => {
             await axios
                 .get(url)
                 .then((res) => {
-                newState[propState] = (res.data);
+                newState[propState] = (res.data.result);
                 })
                 .catch((err) => {
                     console.log(err)
@@ -81,8 +82,8 @@ const ServiceComponent = () => {
                 }); 
             }               
         return;  
-      };
-     
+    };
+  
     useEffect(()=>{
         handleFetch(urls.urlTiposDocumentos, getTiposDni);
         handleFetch(urls.urlEstadosCiviles, getEstadosCiviles);  
@@ -92,7 +93,7 @@ const ServiceComponent = () => {
         handleFetch(urls.urlTrabajosAnteriores, getTrabajosAnteriores);
         handleFetch(urls.urlFamiliares, getFamiliares);
         handleFetch(urls.urlDetalleLicenciasEmpleados, addDetalleLic);
-        handleFetchComun(urls.urlDatosExtras, getDatosExtras);
+        handleFetch(urls.urlDatosExtras, getDatosExtras);
         new Promise((resolve, reject)=>{
                 resolve(
                     handleFetchDom("http://54.243.192.82/api/Calles", "calles"),
@@ -135,6 +136,8 @@ const ServiceComponent = () => {
             refetch={refetch} 
             combosForm={combosForm}
             setCombosForm={setCombosForm}
+            renderButtons={renderButtons} 
+            setRenderButtons={setRenderButtons}
         />
     </div>
   )

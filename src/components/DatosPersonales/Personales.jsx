@@ -2,8 +2,6 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {classesFormDP, inputButtonClasessParentesco, inputButtonClasessTextArea } from '../../classes/classes'
-import { getEstados, getEstadosCiviles, getEstudios, getPaises, getTiposDni } from '../../redux/actions/fetchActions';
-import { AXIOS_ERROR, SET_LOADING } from '../../redux/types/employeTypes';
 import Browser from '../Browser/Browser';
 import Domicilio from '../Domicilios/Domicilio';
 import InputButtonLiquidacion from '../Inputs/InputButton/InputButtonLiquidacion'
@@ -76,7 +74,7 @@ const Personales = ({ index, disable, responses, setResponses, refetch, ImageSel
       },[valor])
   
     
-      let value =disable ? formDatosPersonales?.cuil  : empleadoSeleccionado?.cuil;
+      let value = formDatosPersonales?.cuil ? formDatosPersonales?.cuil  : empleadoSeleccionado?.cuil;
       useEffect(()=>{
           
           setValor(value);
@@ -160,7 +158,7 @@ const Personales = ({ index, disable, responses, setResponses, refetch, ImageSel
                                         <option value="">Seleccionar</option>
                                         {
                                             tiposDocumento && tiposDocumento.map((item,i)=>{
-                                                return(<option value={Number(item.iDtipoDocumento)}>{item.tipoDocumento}</option>)
+                                                return(Number(formDatosPersonales?.iDtipoDocumento ? formDatosPersonales?.iDtipoDocumento : empleadoSeleccionado?.iDtipoDocumento) === item.iDtipoDocumento ?<option selected value={Number(item.iDtipoDocumento)}>{item.tipoDocumento}</option>: <option value={Number(item.iDtipoDocumento)}>{item.tipoDocumento}</option>)
                                             })
                                         }
                                     </select>
